@@ -3,7 +3,7 @@
 *.log
 *.db
 *.pem
-.*
+
 tts
 # You can whitelist files/folders with !, these will not be ignored.
 !*.yaml
@@ -15,6 +15,7 @@ tts
 .storage
 .cloud
 .google.token
+.ios.conf
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml

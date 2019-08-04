@@ -2,8 +2,8 @@ homeassistant:
   # Name of the location where Home Assistant is running
   name: Nido
   # Location required to calculate the time the sun rises and sets
-  latitude: !secrets latitude
-  longitude: !secrets longitude
+  latitude: !secret latitude
+  longitude: !secret longitude
   # Impacts weather/sunrise data (altitude above sea level in meters)
   elevation: 0
   # metric for Metric, imperial for Imperial
@@ -44,7 +44,7 @@ script: !include scripts.yaml
 xiaomi_aqara:
  discovery_retry: 10
  gateways:
-   - key: !secrets xiaomi_gw_key
+   - key: !secret xiaomi_gw_key
 
 ios:
 
@@ -54,12 +54,12 @@ media_player:
     host: osmc.local
     port: 80
     username: lollopod
-    password: !secrets kodi_password
+    password: !secret kodi_password
     enable_websocket: false
 
 meross:
-  username: !secrets meross_user
-  password: !secrets meross_pw
+  username: !secret meross_user
+  password: !secret meross_pw
   scan_interval: 10
   meross_devices_scan_interval: 900
 
@@ -90,13 +90,13 @@ meross:
 remote:
   - platform: xiaomi_miio
     host: 192.168.188.27
-    token: !secrets xiaomi_ir_token
+    token: !secret xiaomi_ir_token
 
 device_tracker:
   - platform: fritz
     host: 192.168.188.1
     username: admin
-    password: !secrets frtiz_pw
+    password: !secret frtiz_pw
     new_device_defaults:
       track_new_devices: true
       hide_if_away: false
