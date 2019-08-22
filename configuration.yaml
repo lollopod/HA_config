@@ -81,11 +81,23 @@ meross:
 #    group.all_automations:
 #      expose: false
 
-#cloud:
-#  google_actions:
-#    filter:
-#      include_entities:
-#        - switch.meross_1801160804285825131634298f1111c1
+# Cloud
+cloud:
+  google_actions:
+    filter:
+      include_domains:
+        - light
+        - switch
+#        - fan
+#        - climate
+      exclude_domains:
+        - group
+        - script
+#    entity_config:
+#      light.philips:
+#        name: Light
+#        room: bedroom
+        
 
 remote:
   - platform: xiaomi_miio
