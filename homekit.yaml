@@ -5,8 +5,8 @@ homekit:
      - switch
       - light
       - media_player
-    include_entities:
-      - binary_sensor.living_room_motion
-  entity_config:
-    switch.livingroom_lamp:
-      type: switch
+#    include_entities:
+#      - binary_sensor.living_room_motion
+#  entity_config:
+#    switch.livingroom_lamp:
+#      type: switch
