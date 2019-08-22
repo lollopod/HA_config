@@ -88,6 +88,8 @@ cloud:
       include_domains:
         - light
         - switch
+        - media_player
+        - sensor
 #        - fan
 #        - climate
       exclude_domains:
