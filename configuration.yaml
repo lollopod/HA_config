@@ -1,3 +1,5 @@
+
+
 homeassistant:
   # Name of the location where Home Assistant is running
   name: Nido
@@ -19,20 +21,6 @@ default_config:
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 # http:
 #   base_url: example.duckdns.org:8123
-#added to enable SSL/TLS
-#http:
-# base_url: https://hwz6fdp0fkttkrms.myfritz.net:8123
-# ssl_certificate: /home/homeassistant/.homeassistant/certificate.pem
-# ssl_key: /home/homeassistant/.homeassistant/privkey.pem
-
-
-# Discover some devices automatically
-discovery:
-
-# Sensors
-sensor:
-  # Weather prediction
-  - platform: yr
 
 # Text to speech
 tts:
@@ -41,47 +29,32 @@ tts:
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
+
 xiaomi_aqara:
  discovery_retry: 10
  gateways:
    - key: !secret xiaomi_gw_key
 
+light:
+  - platform: switch
+    name: Small Lamp
+    entity_id: switch.livingroom_lamp
+
 ios:
 
+#meross:
+#  username: !secret meross_user
+#  password: !secret meross_pw
+#  scan_interval: 10
+#  meross_devices_scan_interval: 500
 
-media_player:
-  - platform: kodi
-    host: osmc.local
-    port: 80
-    username: lollopod
-    password: !secret kodi_password
-    enable_websocket: false
+logger:
+  default: WARNING
+  logs:
+    meross_sensor: DEBUG
+    meross_switch: DEBUG
+    meross_init: DEBUG
 
-meross:
-  username: !secret meross_user
-  password: !secret meross_pw
-  scan_interval: 10
-  meross_devices_scan_interval: 900
-
-#google_assistant:
-#  project_id: via-falloppio
-#  api_key: YOUR_API_KEY
-#  exposed_domains:
-#    - switch
-#    - light
-#  entity_config:
-#    switch.kitchen:
-#      name: luce-gateway
-#      aliases:
-#        - BRIGHT_LIGHTS
-#        - ENTRY_LIGHTS
-#    light.living_room:
-#      expose: false
-#      room: LIVING_ROOM
-#    group.all_automations:
-#      expose: false
-
-# Cloud
 cloud:
   google_actions:
     filter:
@@ -90,28 +63,17 @@ cloud:
         - switch
         - media_player
         - sensor
-#        - fan
-#        - climate
+        - fan
+        - climate
       exclude_domains:
         - group
         - script
 #    entity_config:
-#      light.philips:
-#        name: Light
-#        room: bedroom
-        
+#      switch.plug_158d000154a757:
+#        name: Night light
+#        room:
 
-remote:
-  - platform: xiaomi_miio
-    host: 192.168.188.27
-    token: !secret xiaomi_ir_token
-
-device_tracker:
-  - platform: fritz
-    host: 192.168.188.1
-    username: admin
-    password: !secret frtiz_pw
-    new_device_defaults:
-      track_new_devices: true
-      hide_if_away: false
-
+#remote:
+#  - platform: xiaomi_miio
+#    host: 192.168.188.27
+#    token: !secret xiaomi_ir_token
