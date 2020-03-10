@@ -55,19 +55,19 @@ logger:
     meross_switch: DEBUG
     meross_init: DEBUG
 
-cloud:
-  google_actions:
-    filter:
-      include_domains:
-        - light
-        - switch
-        - media_player
-        - sensor
-        - fan
-        - climate
-      exclude_domains:
-        - group
-        - script
+#cloud:
+#  google_actions:
+#    filter:
+#      include_domains:
+#        - light
+#        - switch
+#        - media_player
+#        - sensor
+#        - fan
+#        - climate
+#      exclude_domains:
+#        - group
+#        - script
 #    entity_config:
 #      switch.plug_158d000154a757:
 #        name: Night light
