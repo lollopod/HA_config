@@ -1,11 +1,11 @@
 switch.plug_158d000154a757:
-  friendly_name: livingroom_lamp
+  friendly_name: comodisa
 light.gateway_light_34ce0085a83c:
-  friendly_name: bedlamp
-group.all_lights:
-  entity_id:
-  - livingroom_light
-  - bedlamp
+  friendly_name: TV_light
+#group.all_lights:
+#  entity_id:
+#  - livingroom_light
+#  - bedlamp
 binary_sensor.motion_sensor_158d00015b833f:
   friendly_name: PIR_bedroom
 sensor.meross_1801160804285825131634298f1111c1_current:

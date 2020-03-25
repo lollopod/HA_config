@@ -1,0 +1,20 @@
+{
+    "manufacturer": "Telefunken",
+    "supportedModels": [
+      "Unknown"
+    ],
+    "supportedController": "Broadlink",
+    "commandsEncoding": "Base64",
+    "commands": {
+        "off": "JgBIABkcPBwfHB4cHxweOTwcHzkfGzwcHwALPCAaPhohGiAaIRogNzwcITcgGzwbIQALOiAaPhogGiEaIBohNz4aITcgGj4aIQANBQ==",
+        "on": "JgBIABkcPBwfHB4cHxweOTwcHzkfGzwcHwALPCAaPhohGiAaIRogNzwcITcgGzwbIQALOiAaPhogGiEaIBohNz4aITcgGj4aIQANBQ==",
+        "previousChannel": "JgBoABobHxs9GyAbHxsgOCAaPRsgGx8bIDggAAscHhwfGzwcHxsgGx45Hxw8HB4cIBseOR8ACx0eHB4cPBwfHB4cIDgeHDwcHxweHCA4IAALGiEaIBo+GiAaIRogNx8cPBwgGiEaIDchAA0F",
+        "nextChannel": "JgBoAB8bIBo9GyAbHxsgOCAaPRsgGx8bIBsfAAs5IBsgGj0bIBsfGyA4IBo9GyAbIBogGyAACzkfGyAbPRsfGyAbHzggGz0bHxsgGx8bIAALOx0bIBs9Gx8bIBsfOCAbPRsfGyAbHxsgAA0F",
+        "volumeDown": "JgBgABsaPhohGiAaIRogNz43PhohGiA3IQALHB8aPRohGiAaIRogNz43PxogGiA3IQALGCMaPhogGiEaIBohNz43PRsgGiE3IAALHB8aPhogGiEaIBohNz43PhogGiE3IAANBQAAAAAAAAAA",
+        "volumeUp": "JgAwABsaPhogGh8cIBofOT43PhogGh8cIAALOh8aPRohGiAaIRofOTs5PhofHCAaIQANBQAAAAAAAAAA",
+        "mute": "JgBgABsbHxs+GiAbIBohNzwcHzghGj43HwALHR8bHxs9GyAbHxsgOD0bHzggGz04HwALHB8bHxs9GyAbHxsgOD0bHzggGz04HwALHB8bHxs9GyAbHxsgODwbIDggGj04IAANBQAAAAAAAAAA",
+        "sources": {
+            "change": "JgBOABobPRsgGx8bIBsfOCAbHxsgGz0aIBsgAAs5Hxs9GyAbHxsgGx84IBsfGyAbPRogGyAACzkfGz0bHxsgGx8bIDggGiAbHxs9GyAbHwANBQAAAAAAAAAAAAA="
+        }
+    }
+}

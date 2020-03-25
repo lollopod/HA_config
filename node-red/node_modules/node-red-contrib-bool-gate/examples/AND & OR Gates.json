@@ -1,0 +1,293 @@
+[
+    {
+        "id": "63f42b9b.223b64",
+        "type": "and-gate",
+        "z": "22a189e4.114926",
+        "name": "Presence & Temperature beetween",
+        "rules": [
+            {
+                "t": "true",
+                "propertyType": "msg",
+                "property": "payload",
+                "topic": "home/sensor/presence"
+            },
+            {
+                "t": "btwn",
+                "v": "18",
+                "vt": "num",
+                "v2": "23",
+                "v2t": "num",
+                "propertyType": "msg",
+                "property": "payload",
+                "topic": "home/sensor/temperature"
+            }
+        ],
+        "outputTopic": "example",
+        "gateType": "and",
+        "emitOnlyIfTrue": false,
+        "x": 520,
+        "y": 300,
+        "wires": [
+            [
+                "a3941075.cff52"
+            ]
+        ]
+    },
+    {
+        "id": "fc15cf34.1a98a",
+        "type": "inject",
+        "z": "22a189e4.114926",
+        "name": "",
+        "topic": "home/sensor/presence",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 170,
+        "y": 220,
+        "wires": [
+            [
+                "63f42b9b.223b64"
+            ]
+        ]
+    },
+    {
+        "id": "10672b34.a59275",
+        "type": "inject",
+        "z": "22a189e4.114926",
+        "name": "",
+        "topic": "home/sensor/temperature",
+        "payload": "21",
+        "payloadType": "num",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 180,
+        "y": 400,
+        "wires": [
+            [
+                "63f42b9b.223b64"
+            ]
+        ]
+    },
+    {
+        "id": "456a5cc4.778994",
+        "type": "inject",
+        "z": "22a189e4.114926",
+        "name": "",
+        "topic": "home/sensor/presence",
+        "payload": "false",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 160,
+        "y": 260,
+        "wires": [
+            [
+                "63f42b9b.223b64"
+            ]
+        ]
+    },
+    {
+        "id": "31e9a6c9.59738a",
+        "type": "inject",
+        "z": "22a189e4.114926",
+        "name": "",
+        "topic": "home/sensor/temperature",
+        "payload": "17",
+        "payloadType": "num",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 180,
+        "y": 360,
+        "wires": [
+            [
+                "63f42b9b.223b64"
+            ]
+        ]
+    },
+    {
+        "id": "dd7cf885.985aa8",
+        "type": "inject",
+        "z": "22a189e4.114926",
+        "name": "",
+        "topic": "home/sensor/temperature",
+        "payload": "25",
+        "payloadType": "num",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 180,
+        "y": 440,
+        "wires": [
+            [
+                "63f42b9b.223b64"
+            ]
+        ]
+    },
+    {
+        "id": "121e9c07.ea84b4",
+        "type": "comment",
+        "z": "22a189e4.114926",
+        "name": "[SIMULATION] Temperature",
+        "info": "",
+        "x": 180,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "efaae225.b6b6b",
+        "type": "comment",
+        "z": "22a189e4.114926",
+        "name": "[SIMULATION] Presence",
+        "info": "",
+        "x": 150,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "a3941075.cff52",
+        "type": "or-gate",
+        "z": "22a189e4.114926",
+        "name": "",
+        "rules": [
+            {
+                "t": "true",
+                "propertyType": "msg",
+                "property": "bool",
+                "topic": "example"
+            },
+            {
+                "t": "regex",
+                "v": "val",
+                "vt": "str",
+                "case": true,
+                "propertyType": "flow",
+                "property": "payload"
+            }
+        ],
+        "outputTopic": "",
+        "gateType": "or",
+        "emitOnlyIfTrue": false,
+        "x": 770,
+        "y": 380,
+        "wires": [
+            [
+                "d40815ef.1435e8"
+            ]
+        ]
+    },
+    {
+        "id": "29b2cb4f.73a404",
+        "type": "change",
+        "z": "22a189e4.114926",
+        "name": "... to \"valable\"",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "flow",
+                "to": "valable",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "89d7edf9.3a09a",
+        "type": "change",
+        "z": "22a189e4.114926",
+        "name": "... to \"rejected\"",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "flow",
+                "to": "rejected",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "91e3f0f3.2a983",
+        "type": "inject",
+        "z": "22a189e4.114926",
+        "name": "Set flow.payload ...",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 170,
+        "y": 560,
+        "wires": [
+            [
+                "29b2cb4f.73a404"
+            ]
+        ]
+    },
+    {
+        "id": "bd95f272.33485",
+        "type": "inject",
+        "z": "22a189e4.114926",
+        "name": "Set flow.payload ...",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 170,
+        "y": 620,
+        "wires": [
+            [
+                "89d7edf9.3a09a"
+            ]
+        ]
+    },
+    {
+        "id": "d7a8560e.227338",
+        "type": "comment",
+        "z": "22a189e4.114926",
+        "name": "[SIMULATION] Changing the flow properties",
+        "info": "",
+        "x": 230,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "d40815ef.1435e8",
+        "type": "debug",
+        "z": "22a189e4.114926",
+        "name": "Result",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 930,
+        "y": 400,
+        "wires": []
+    }
+]

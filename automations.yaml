@@ -1,1 +1,15 @@
-[]
+- alias: 'Away Mode automatico'
+  trigger:
+    platform: state
+    entity_id: group.famiglia
+    from: 'home'
+    to: 'not_home'
+#  condition:
+#    condition: state
+#    entity_id: climate.climatizzatore_cucina
+#    state: 'Heat'
+  action:
+    - service: climate.set_preset_mode
+      data:
+        entity_id: climate.climatizzatore_cucina
+        set_preset_mode: away

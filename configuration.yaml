@@ -18,6 +18,12 @@ homeassistant:
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
+#discovery:
+#  ignore:
+#    - yeelight
+
+hacs:
+  token: b449cdfd202fe593275f89f50f3f6197efe909de
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 # http:
 #   base_url: example.duckdns.org:8123
@@ -27,53 +33,169 @@ tts:
   - platform: google_translate
 
 group: !include groups.yaml
-automation: !include automations.yaml
+#automation: !include automations.yaml
 script: !include scripts.yaml
+homekit: !include homekit.yaml
+
+automation:
+  - alias: 'Start HomeKit'
+    trigger:
+      - platform: homeassistant
+        event: start
+    action:
+      - delay: 00:05  # Waits 5 minutes
+      - service: homekit.start
+
+##################
+#logger configuration
+##################
+#logger:
+#  default: warn
+#  logs:
+#    yeelight: debug
+
+
+
+#xiaomi gateway
 
 xiaomi_aqara:
  discovery_retry: 10
  gateways:
    - key: !secret xiaomi_gw_key
 
+#lights section 
+
 light:
   - platform: switch
-    name: Small Lamp
-    entity_id: switch.livingroom_lamp
+    name: Comodino Lorenzo
+    entity_id: switch.sonoff_10008eab7f
+  - platform: switch
+    name: Comodino Isa
+    entity_id: switch.plug_158d000154a757
+#  - platform: yeelight
+#    devices:
+#      192.168.1.38:
+#        name: Piantana
+        
+#yeelight:
+#  devices:
+#    192.168.1.38:
+#      name: 'Piantana'
+#      model: 'color1'
+#switches section 
 
+meross_cloud:
+  username: !secret meross_user
+  password: !secret meross_pw
+
+sonoff:
+  username: !secret sonoff_user
+  password: !secret sonoff_pw
+  scan_interval: 60
+  grace_period: 600
+  api_region: 'eu'
+  entity_prefix: True
+  debug: False
+
+
+
+          
+sensor:
+  - platform: template
+    sensors:
+      appliances_combined_state:
+        value_template: '{{ "on" if (is_state("switch.termoarredo", "on") and is_state("switch.scaldabagno", "on")) else "off" }}'
+        friendly_name: "Stato Prese Switchable"
+  # Tracking entity to home
+  - platform: waze_travel_time
+    name: "Lorenzo to home"
+    origin: person.lorenzo_campioni
+    destination: zone.home
+    region: 'EU'
+  - platform: waze_travel_time
+    name: "Isadora to home"
+    origin: person.isa
+    destination: zone.home
+    region: 'EU'
+
+
+
+
+#device trackers 
 ios:
 
-#meross:
-#  username: !secret meross_user
-#  password: !secret meross_pw
-#  scan_interval: 10
-#  meross_devices_scan_interval: 500
+device_tracker:
+  - platform: fritz
+    host: 192.168.188.1
 
-logger:
-  default: WARNING
-  logs:
-    meross_sensor: DEBUG
-    meross_switch: DEBUG
-    meross_init: DEBUG
 
-#cloud:
-#  google_actions:
-#    filter:
-#      include_domains:
-#        - light
-#        - switch
-#        - media_player
-#        - sensor
-#        - fan
-#        - climate
-#      exclude_domains:
-#        - group
-#        - script
-#    entity_config:
-#      switch.plug_158d000154a757:
-#        name: Night light
-#        room:
 
-#remote:
-#  - platform: xiaomi_miio
-#    host: 192.168.188.27
-#    token: !secret xiaomi_ir_token
+#Dominio Switchable
+switch:
+  - platform: template
+    switches:
+      appliances:
+        friendly_name: "Prese Switchable"
+        value_template: "{{ is_state('sensor.appliances_combined_state', 'on') }}"
+        turn_on:
+          service: switch.turn_on
+          entity_id: 
+            - switch.termoarredo
+            - switch.scaldabagno
+        turn_off:
+          service: switch.turn_off
+          entity_id:
+            - switch.termoarredo
+            - switch.scaldabagno
+############# Climate section 
+  - platform: broadlink
+    host: 192.168.188.39
+    mac: !secret broadlink_mac
+    timeout: 30
+    friendly_name: "Dispositivo Broadlink"
+    type: rm_mini
+    switches:
+      learner:
+        friendly_name: "Learner"
+        command_on: 'JgC8AXQ3EQwRKBELEQsRDBELDw4RCxELEQwQDRELEQwRKBELEQsRDBELEQwRCw8NESgPKhEoEQsSCxEoEQwQDBELEQwRCxEMDw0RCxEMEQsRDBELEQsQDg8NEQsRDBELEQwRCxELEA0RCxEMEQsRCxANEA0PDRANESgRJxEMEQsRDBAMEQsRAAFFdDcPDhEnEgwRCxELEQwPDREMEQsRCxEMEQsPDhEnEQwRCxANEQwRCxEMEQsPKhEoEScRDBELESgRCxEMDw0PDhELEA0PDg8NEQsRDBELEQwPDREoEQsRDA8pEQwRCxInEgsRDBELESgPKhEnESgRDBAMEQsRDBELEQwPDRELEgwRJxEoESgPKhEnEgsRKBELESgRKBELESgRKBELEQsQDRANEQsRDA8NEA0RCxELEgsRCw8OEScRKBEoEQsQDRANEQsRDBELEQwPDRELECkRKBEoEQsRDBELDw0RDBANDw0QDRELEQwRCxELEA0RCxEMEQsRKBELEQwRJxENEQsRCxEoEQwRCxELEQwRCxEMDw0RCxEMEQsQDREMEAwRDA8NEQsRDBEoDykRKBEoDyoRCxEMEQANBQAAAAAAAAAAAAAAAA'
+        command_off: ''
+      kitchen_cooler:
+        friendly_name: "Kitchen Cooler"
+        command_on: 'JgC8AXQ3EA0PKREMDw0QDQ8NDw0QDQ8NEA0QDQ8NEA0PKhAMDw0QDQ8NDw0QDQ8NECkQKRApEAwRDBApEA0PDQ8NEA0PDQ8ODw0PDRANDw0PDRANDw0RDQ8NDw0QDQ8NDw4PDQ8NEA0PDQ8ODw0PDRANEQwPDRANDyoQKBANDw0PDg8NDw0QAAFGdTYQDQ8pEQ0PDQ8ODw0PDRANDw0PDRANDw0QDQ8qEAwPDRENDw0PDRANDw0PKhApECgRDA8NECkQDBANDw0QDQ8NEQwQDQ8NDw4PDQ8NEA0PDQ8qEAwQDQ8pESgQKRAMEQ0PDQ8qEAwQDQ8NDyoQDBANDw0PDg8NDw0QDQ8NEQwQKRApECkQKRAoEA0PKhAMDyoQKBEMDyoQKBEMDw0QDREMDw0QDQ8NDw4PDQ8NEA0PDQ8ODykQKRApEAwQDREMDw0QDQ8NDw4PDQ8NECkQKRApEAwPDg8NDw0QDREMDw0QDQ8NDw4PDQ8NEA0PDQ8ODw0PKhAMDw4RKBANDw0PDRApEA0PDQ8NEA0PDQ8ODw0PDRANDw0RDBANDw0PDg8NDw0QDQ8NDyoQDBApEA0PDQ8NEAANBQAAAAAAAAAAAAAAAA=='
+        command_off: 'JgC8AXQ3EgoQKRIKEgsQDBILEQsPDRANDw0QDRILEgoSJxIKEgsQDBILEgoQDBANDyoSJhInEA0RDA8qEAwSChEMDw0QDRIKEgoQDQ8NEgsSChIKEQwQDQ8ODw0PDRANEgoSChILEAwQDQ8NEgoQDQ8NEwsQDA8NECkSJxAMEA0SChILEQsQAAFFeDQQDA8qEwoSCxAMDw0SCxIKEgsQDBIKEQwSChInEAwSCxILEAwSCxAMEA0PKhEnECkSChANEicQDA8NEgsSChANEgsQDBILEgoPDRILEgoSCxAMDw0QDQ8qEiYSJxANEgsQDBILEicQKBApEicQDBANEgoPDRILEgoSCxIKEA0QKRApEicSJxEnEgsSJhEMEicSJxELEicQKBILEQsQDRANEgoQDQ8NDw0QDQ8NEA0PDRIKEicSJxApEAwRDBILEgoRDBAMEA0PDRIKEicQKRInEgoQDBANDw0QDRANEgoQDQ8NEgsRCxAMEA0PDRILEAwSJxAMDw0RKBENDw0PDRApEgsPDQ8NEA0SChILDw0SChANDw0QDRILEAwSCw8NEgoRKBANDykQKRILECgQDQ8NDwANBQAAAAAAAAAAAAAAAA'
+      kitchen_heater:
+        friendly_name: "Kitchen Heater"
+        command_on: 'JgC8AXQ3EQwRKBELEQsRDBELDw4RCxELEQwQDRELEQwRKBELEQsRDBELEQwRCw8NESgPKhEoEQsSCxEoEQwQDBELEQwRCxEMDw0RCxEMEQsRDBELEQsQDg8NEQsRDBELEQwRCxELEA0RCxEMEQsRCxANEA0PDRANESgRJxEMEQsRDBAMEQsRAAFFdDcPDhEnEgwRCxELEQwPDREMEQsRCxEMEQsPDhEnEQwRCxANEQwRCxEMEQsPKhEoEScRDBELESgRCxEMDw0PDhELEA0PDg8NEQsRDBELEQwPDREoEQsRDA8pEQwRCxInEgsRDBELESgPKhEnESgRDBAMEQsRDBELEQwPDRELEgwRJxEoESgPKhEnEgsRKBELESgRKBELESgRKBELEQsQDRANEQsRDA8NEA0RCxELEgsRCw8OEScRKBEoEQsQDRANEQsRDBELEQwPDRELECkRKBEoEQsRDBELDw0RDBANDw0QDRELEQwRCxELEA0RCxEMEQsRKBELEQwRJxENEQsRCxEoEQwRCxELEQwRCxEMDw0RCxEMEQsQDREMEAwRDA8NEQsRDBEoDykRKBEoDyoRCxEMEQANBQAAAAAAAAAAAAAAAA'
+        command_off: 'JgC8AXQ3EgoQKRIKEgsQDBILEQsPDRANDw0QDRILEgoSJxIKEgsQDBILEgoQDBANDyoSJhInEA0RDA8qEAwSChEMDw0QDRIKEgoQDQ8NEgsSChIKEQwQDQ8ODw0PDRANEgoSChILEAwQDQ8NEgoQDQ8NEwsQDA8NECkSJxAMEA0SChILEQsQAAFFeDQQDA8qEwoSCxAMDw0SCxIKEgsQDBIKEQwSChInEAwSCxILEAwSCxAMEA0PKhEnECkSChANEicQDA8NEgsSChANEgsQDBILEgoPDRILEgoSCxAMDw0QDQ8qEiYSJxANEgsQDBILEicQKBApEicQDBANEgoPDRILEgoSCxIKEA0QKRApEicSJxEnEgsSJhEMEicSJxELEicQKBILEQsQDRANEgoQDQ8NDw0QDQ8NEA0PDRIKEicSJxApEAwRDBILEgoRDBAMEA0PDRIKEicQKRInEgoQDBANDw0QDRANEgoQDQ8NEgsRCxAMEA0PDRILEAwSJxAMDw0RKBENDw0PDRApEgsPDQ8NEA0SChILDw0SChANDw0QDRILEAwSCw8NEgoRKBANDykQKRILECgQDQ8NDwANBQAAAAAAAAAAAAAAAA'
+
+smartir: 
+
+climate:
+
+  - platform: dualmode_generic
+    name: Termostato Cucina
+    heater: switch.kitchen_heater
+    cooler: switch.kitchen_cooler
+    target_sensor: sensor.temperature_158d0003203bba
+    min_cycle_duration: 00:15:00
+    away_temp: 17
+    cold_tolerance: 1
+    hot_tolerance: 1
+    precision: 0.1
+#ir file for media player to be retreived from broadlink app
+media_player:
+  - platform: smartir
+    name: TV
+    device_code: 8000
+    controller_data: 192.168.188.39
+#  - platform: androidtv
+#    name: Mi Box S
+#    host: 192.168.188.41
+
+
+spotify:
+  client_id: !secret spotify_id
+  client_secret: !secret spotify_secret
+
+
+ 

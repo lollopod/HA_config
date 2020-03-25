@@ -1,0 +1,5 @@
+family:
+  name: Famiglia
+  entities:
+    - person.lorenzo_campioni
+    - person.isa

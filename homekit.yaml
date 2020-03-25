@@ -1,12 +1,8 @@
 # Example configuration.yaml entry configuring HomeKit
-homekit:
-  filter:
-    include_domains:
-     - switch
-      - light
-      - media_player
-#    include_entities:
-#      - binary_sensor.living_room_motion
-#  entity_config:
-#    switch.livingroom_lamp:
-#      type: switch
+auto_start: false
+
+filter:
+  include_domains:
+    - switch
+    - light 
+    - media_player
