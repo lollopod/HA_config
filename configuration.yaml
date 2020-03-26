@@ -37,6 +37,15 @@ group: !include groups.yaml
 script: !include scripts.yaml
 homekit: !include homekit.yaml
 
+###############git and CI ###############
+binary_sensor:
+  - platform: rest
+    name: Travis Status
+    resource: https://api.travis-ci.org/repos/lollopod/HA_config/cc.json?branch=master
+    scan_interval: 60
+    value_template: "{{ value_json.last_build_status|int(1) == 0 }}"
+  
+
 automation:
   - alias: 'Start HomeKit'
     trigger:
@@ -117,7 +126,11 @@ sensor:
     origin: person.isa
     destination: zone.home
     region: 'EU'
-
+  - platform: rest
+    name: Travis Status Label
+    resource: https://api.travis-ci.org/repos/lollopod/HA_config/cc.json?branch=master
+    scan_interval: 60
+    value_template: "{{ value_json.last_build_number }}"
 
 
 
@@ -192,10 +205,15 @@ media_player:
 #    name: Mi Box S
 #    host: 192.168.188.41
 
+#n26:
+#  username: !secret n26_user
+#  password: !secret n26_password
+
 
 spotify:
   client_id: !secret spotify_id
   client_secret: !secret spotify_secret
 
-
+shell_command:
+  git_pull: ./gitpull.sh
  

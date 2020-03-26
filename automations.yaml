@@ -1,15 +1,22 @@
-- alias: 'Away Mode automatico'
+
+- alias: 'Start HomeKit'
+  trigger:
+    - platform: homeassistant
+      event: start
+  action:
+    - delay: 00:05  # Waits 5 minutes
+    - service: homekit.start
+
+# Apply value of a GUI slider to the shell_command
+
+- alias: continuous_integration
   trigger:
     platform: state
-    entity_id: group.famiglia
-    from: 'home'
-    to: 'not_home'
-#  condition:
-#    condition: state
-#    entity_id: climate.climatizzatore_cucina
-#    state: 'Heat'
-  action:
-    - service: climate.set_preset_mode
-      data:
-        entity_id: climate.climatizzatore_cucina
-        set_preset_mode: away
+    entity_id: binary_sensor.travis_status
+    to: 'pass'
+    condition:
+      condition: state
+      entity_id: input_boolean.enable_git_pull
+      state: 'on'
+    action:
+      service: shell_command.git_pull

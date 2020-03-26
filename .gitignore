@@ -16,6 +16,7 @@ tts
 .cloud
 .google.token
 .ios.conf
+.ssh
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml

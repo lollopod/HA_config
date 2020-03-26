@@ -1,0 +1,6 @@
+
+pullrestart:
+  alias: Pull from git and restart HA
+  sequence:
+    - service: shell_command.git_pull
+    - service: homeassistant.restart
