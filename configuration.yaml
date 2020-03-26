@@ -33,7 +33,7 @@ tts:
   - platform: google_translate
 
 group: !include groups.yaml
-#automation: !include automations.yaml
+automation: !include automations.yaml
 script: !include scripts.yaml
 homekit: !include homekit.yaml
 
@@ -46,14 +46,14 @@ binary_sensor:
     value_template: "{{ value_json.last_build_status|int(1) == 0 }}"
   
 
-automation:
-  - alias: 'Start HomeKit'
-    trigger:
-      - platform: homeassistant
-        event: start
-    action:
-      - delay: 00:05  # Waits 5 minutes
-      - service: homekit.start
+#automation:
+#  - alias: 'Start HomeKit'
+#    trigger:
+#      - platform: homeassistant
+#        event: start
+#    action:
+#      - delay: 00:05  # Waits 5 minutes
+#      - service: homekit.start
 
 ##################
 #logger configuration
