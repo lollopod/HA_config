@@ -416,7 +416,7 @@
   },
   "node-red-contrib-cast": {
    "name": "node-red-contrib-cast",
-   "version": "0.2.14",
+   "version": "0.2.15",
    "local": false,
    "nodes": {
     "cast-to-client": {
@@ -450,7 +450,7 @@
   },
   "node-red-contrib-home-assistant-websocket": {
    "name": "node-red-contrib-home-assistant-websocket",
-   "version": "0.21.3",
+   "version": "0.21.5",
    "local": false,
    "nodes": {
     "server": {
@@ -893,7 +893,7 @@
   },
   "node-red-contrib-sunevents": {
    "name": "node-red-contrib-sunevents",
-   "version": "2.0.2",
+   "version": "2.0.3",
    "local": false,
    "nodes": {
     "node-red-contrib-sunevents": {
@@ -1480,7 +1480,7 @@
   "node-red-contrib-finite-statemachine": {
    "name": "node-red-contrib-finite-statemachine",
    "version": "0.2.10",
-   "local": false,
+   "local": true,
    "nodes": {
     "finite-state-machine": {
      "name": "finite-state-machine",
@@ -1497,7 +1497,7 @@
   "node-red-contrib-float": {
    "name": "node-red-contrib-float",
    "version": "1.0.3",
-   "local": false,
+   "local": true,
    "nodes": {
     "toFloat": {
      "name": "toFloat",
@@ -1514,7 +1514,7 @@
   "node-red-contrib-simple-gate": {
    "name": "node-red-contrib-simple-gate",
    "version": "0.2.4",
-   "local": false,
+   "local": true,
    "nodes": {
     "gate": {
      "name": "gate",
@@ -1531,7 +1531,7 @@
   "node-red-contrib-bool-gate": {
    "name": "node-red-contrib-bool-gate",
    "version": "1.0.2",
-   "local": false,
+   "local": true,
    "nodes": {
     "and": {
      "name": "and",
@@ -1558,7 +1558,7 @@
   "node-red-contrib-xiaomi-smart-devices": {
    "name": "node-red-contrib-xiaomi-smart-devices",
    "version": "2.0.4",
-   "local": false,
+   "local": true,
    "nodes": {
     "xiaomi-gateway-config": {
      "name": "xiaomi-gateway-config",
@@ -1687,7 +1687,7 @@
   "node-red-contrib-yeelight": {
    "name": "node-red-contrib-yeelight",
    "version": "1.0.6",
-   "local": false,
+   "local": true,
    "nodes": {
     "yeelight": {
      "name": "yeelight",
@@ -1705,7 +1705,7 @@
   "node-red-contrib-yeelight-compat-hue": {
    "name": "node-red-contrib-yeelight-compat-hue",
    "version": "1.2.1",
-   "local": false,
+   "local": true,
    "nodes": {
     "yeelight-compat-hue-out": {
      "name": "yeelight-compat-hue-out",
@@ -1742,7 +1742,7 @@
   "node-red-contrib-webhookrelay": {
    "name": "node-red-contrib-webhookrelay",
    "version": "0.3.0",
-   "local": false,
+   "local": true,
    "nodes": {
     "webhookrelay": {
      "name": "webhookrelay",
@@ -1753,6 +1753,24 @@
      "local": true,
      "module": "node-red-contrib-webhookrelay",
      "file": "/config/node-red/node_modules/node-red-contrib-webhookrelay/webhookrelay.js"
+    }
+   }
+  },
+  "node-red-contrib-ifttt": {
+   "name": "node-red-contrib-ifttt",
+   "version": "0.3.1",
+   "local": true,
+   "nodes": {
+    "ifttt": {
+     "name": "ifttt",
+     "types": [
+      "ifttt-key",
+      "ifttt out"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-ifttt",
+     "file": "/config/node-red/node_modules/node-red-contrib-ifttt/nodes/ifttt.js"
     }
    }
   }
@@ -1769,7 +1787,7 @@
      "view-show-tips": false
     }
    },
-   "menu-menu-item-sidebar": true
+   "menu-menu-item-sidebar": false
   }
  }
 }

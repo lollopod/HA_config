@@ -1,0 +1,19 @@
+input_boolean:
+  # Switch to Enable Alarm Clock
+  climate_auto:
+    name: Climate Auto
+    initial: on
+    icon: mdi:climate
+  # Used by Automation to enable Snooze
+  lights_auto:
+    name: Lights_Auto
+    initial: on
+    icon: mdi:bulb
+  # Optional: Enable radio for sequence
+
+input_datetime:
+  # The Alarm Time input by the User
+  alarmclock_time:
+    name: Alarm Time
+    has_date: false
+    has_time: true

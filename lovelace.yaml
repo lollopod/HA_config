@@ -1,0 +1,21 @@
+title: Il Nido pensante
+views:
+    # View tab title.
+  - title: Example
+    cards:
+        # The markdown card will render markdown text.
+      - type: markdown
+        title: Lovelace
+        content: >
+          Welcome to your **Brain-powered nest**.
+      - type: entities
+        # Title of the entities card
+        title: Auto
+        # The entities here will be shown in the same order as specified.
+        # Each entry is an entity ID or a map with extra options.
+        entities:
+          - input_boolean.climate_auto
+          - input_boolean.lights_auto
+#    - input_datetime
+#    - sensor.switch_on_lights
+   

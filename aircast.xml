@@ -21,15 +21,21 @@
 <enabled>1</enabled>
 </device>
 <device>
+<udn>5ab902f80a6cbe9cda091b97fa7c9c4c</udn>
+<name>Home mini+</name>
+<mac>cc:cc:08:c3:cb:30</mac>
+<enabled>1</enabled>
+</device>
+<device>
 <udn>5f61e09e-f75a-4961-8677-85a98c6a4003</udn>
 <name>Piccoletti+</name>
 <mac>cc:cc:b1:50:8e:63</mac>
 <enabled>1</enabled>
 </device>
 <device>
-<udn>5ab902f80a6cbe9cda091b97fa7c9c4c</udn>
-<name>Home mini+</name>
-<mac>cc:cc:08:c3:cb:30</mac>
+<udn>8ee7ed2eaf5eeb52c634328a635b05cf</udn>
+<name>mi box+</name>
+<mac>cc:cc:b9:fa:43:69</mac>
 <enabled>1</enabled>
 </device>
 </aircast>

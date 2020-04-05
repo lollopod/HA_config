@@ -25,35 +25,66 @@ default_config:
 hacs:
   token: !secret hacs_token
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-# http:
-#   base_url: example.duckdns.org:8123
+http:
+  base_url: https://lollopod-ha.webrelay.io
 
 # Text to speech
 tts:
   - platform: google_translate
 
 group: !include groups.yaml
-#automation: !include automations.yaml
+automation: !include automations.yaml
 script: !include scripts.yaml
 homekit: !include homekit.yaml
 
-###############git and CI ###############
-binary_sensor:
-  - platform: rest
-    name: Travis Status
-    resource: https://api.travis-ci.org/repos/lollopod/HA_config/cc.json?branch=master
-    scan_interval: 60
-    value_template: "{{ value_json.last_build_status|int(1) == 0 }}"
+#!include interface_entities.yaml
+input_boolean:
+  # Switch to Enable Alarm Clock
+  climate_auto:
+    name: Climate Auto
+    initial: on
+    icon: mdi:home-thermometer
+  # Used by Automation to enable Snooze
+  lights_auto:
+    name: Lights_Auto
+    initial: on
+    icon: mdi:lightbulb-multiple
+  # Optional: Enable radio for sequence
+  #input booolean for node red
+  sunset_approaching:
+    name: Sunset Approaching
+    initial: off
+    icon: mdi:sun
+
+input_datetime:
+  # The Alarm Time input by the User
+  alarmclock_time:
+    name: Alarm Time
+    has_date: false
+    has_time: true
+
+
+
+lovelace:
+  mode: storage
+  # Add yaml dashboards
+  dashboards:
+    lovelace-yaml:
+      mode: yaml
+      title: Auto
+      icon: mdi:home-heart
+      show_in_sidebar: true
+      filename: lovelace.yaml
   
 
-automation:
-  - alias: 'Start HomeKit'
-    trigger:
-      - platform: homeassistant
-        event: start
-    action:
-      - delay: 00:05  # Waits 5 minutes
-      - service: homekit.start
+#automation:
+#  - alias: 'Start HomeKit'
+#    trigger:
+#      - platform: homeassistant
+#        event: start
+#    action:
+#      - delay: 00:05  # Waits 5 minutes
+#      - service: homekit.start
 
 ##################
 #logger configuration
@@ -116,24 +147,63 @@ sensor:
         value_template: '{{ "on" if (is_state("switch.termoarredo", "on") and is_state("switch.scaldabagno", "on")) else "off" }}'
         friendly_name: "Stato Prese Switchable"
   # Tracking entity to home
-  - platform: waze_travel_time
+#  - platform: waze_travel_time
+#    name: "Lorenzo to home"
+#    origin: person.lorenzo_campioni
+#    destination: zone.home
+#    region: 'EU'
+#  - platform: waze_travel_time
+#    name: "Isadora to home"
+#    origin: person.isa
+#    destination: zone.home
+#    region: 'EU'
+  - platform: here_travel_time
+    api_key: !secret here_api_key
     name: "Lorenzo to home"
-    origin: person.lorenzo_campioni
-    destination: zone.home
-    region: 'EU'
-  - platform: waze_travel_time
+    origin_entity_id: person.lorenzo_campioni
+    destination_entity_id: zone.home
+    
+  - platform: here_travel_time
+    api_key: !secret here_api_key
     name: "Isadora to home"
-    origin: person.isa
-    destination: zone.home
-    region: 'EU'
+    origin_entity_id: person.isa
+    destination_entity_id: zone.home
+
   - platform: rest
-    name: Travis Status Label
-    resource: https://api.travis-ci.org/repos/lollopod/HA_config/cc.json?branch=master
-    scan_interval: 60
-    value_template: "{{ value_json.last_build_number }}"
+    resource: https://api.travis-ci.org/repos/lollopod/HA_config/builds
+    headers:
+      Accept: application/vnd.travis-ci.2+json
+    value_template: "{{ value_json.builds[0].state }}"
+    name: "Travis Build Status"
+  - platform: rest
+    resource: https://api.travis-ci.org/repos/lollopod/HA_config/builds
+    headers:
+      Accept: application/vnd.travis-ci.2+json
+    value_template: "{{ value_json.builds[0].number }}"
+    name: "Travis Build Number"
+      
+  - platform: command_line
+    name: Git
+    command: 'git log -1 --pretty=format:''{"commit": "%H", "abbreviated_commit": "%h", "refs": "%D", "subject": "%s", "author": { "name": "%aN", "email": "%aE", "date": "%aD"}, "commiter": { "name": "%cN", "email": "%cE", "date": "%cD" } }'''
+    value_template: >
+      {{ value_json.abbreviated_commit }}
+      json_attributes:
+        - commit
+        - refs
+        - subject
+        - author
+        - commiter
 
-
-
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+      - 'beat'
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /home
+      - type: memory_free
 #device trackers 
 ios:
 
@@ -216,4 +286,18 @@ spotify:
 
 shell_command:
   git_pull: ./gitpull.sh
+  
+  
+google_assistant:
+  project_id: test-raspy-ghome
+  report_state: true
+  service_account: !include google-service-account.json
+  exposed_domains:
+    - light
+
+# Example configuration.yaml entry
+weather:
+  - platform: openweathermap
+    api_key: !secret owm_api_key
+
  
