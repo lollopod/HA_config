@@ -1,0 +1,12 @@
+switch:
+  - platform: wake_on_lan
+    name: WoL  iMac Switch
+    mac: !secret imac_mac_address
+    host: !secret imac_ip_address
+    turn_off:
+      service: shell_command.macbook_shutdown
+      
+      
+shell_command:
+  macbook_standby: ssh -i /config/ssh/id_rsa -o StrictHostKeyChecking=no lorenzocampioni@iMac-di-Lorenzo.local 'sudo pmset sleepnow'
+  macbook_shutdown: ssh -i /config/ssh/id_rsa -o StrictHostKeyChecking=no lorenzocampioni@iMac-di-Lorenzo.local 'sudo shutdown -h now'

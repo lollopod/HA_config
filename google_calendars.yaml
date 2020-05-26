@@ -1,0 +1,56 @@
+
+- cal_id: u69caomahpjmu4j6qf4q7aults@group.calendar.google.com
+  entities:
+  - device_id: capanno
+    ignore_availability: true
+    name: Capanno
+    track: false
+
+- cal_id: campioni.lorenzo@gmail.com
+  entities:
+  - device_id: campioni_lorenzo_gmail_com
+    ignore_availability: true
+    name: campioni.lorenzo@gmail.com
+    track: false
+
+- cal_id: jb6h3lpdrkqsjsbm0lohiket1c@group.calendar.google.com
+  entities:
+  - device_id: nido
+    ignore_availability: true
+    name: Nido
+    track: true
+
+- cal_id: s1g8pdmr544rlagt6pb61vqckg@group.calendar.google.com
+  entities:
+  - device_id: leisure
+    ignore_availability: true
+    name: Leisure
+    track: false
+
+- cal_id: rh33bfa1su4d1p88lteomq9008@group.calendar.google.com
+  entities:
+  - device_id: ingegneria_elettronica_e_delle_telecomunicazioni
+    ignore_availability: true
+    name: Ingegneria Elettronica e delle Telecomunicazioni
+    track: false
+
+- cal_id: addressbook#contacts@group.v.calendar.google.com
+  entities:
+  - device_id: contacts
+    ignore_availability: true
+    name: Contacts
+    track: false
+
+- cal_id: en.italian#holiday@group.v.calendar.google.com
+  entities:
+  - device_id: holidays_in_italy
+    ignore_availability: true
+    name: Holidays in Italy
+    track: false
+
+- cal_id: it.italian#holiday@group.v.calendar.google.com
+  entities:
+  - device_id: festivita_in_italia
+    ignore_availability: true
+    name: "Festivit\xE0 in Italia"
+    track: false

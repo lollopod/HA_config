@@ -1,0 +1,136 @@
+#######################################################################################################################
+## Sensor - Unavailable Sensors
+## - state: number of unavailable sensors
+## - attribute: sensor_names - comma separated list of unavailable sensor names
+## - attribute: sensor_entities: - comma separated list of unavailable sensor entity id's
+## - updates every minute (sensor.time)
+## - sensor entity_id's in ignored_sensors are filtered from this sensor
+## - group.ignored_sensors MUST exist even if empty for sensor template to render
+#######################################################################################################################
+
+sensor:
+  - platform: template
+    sensors:
+      unavailable_sensors:
+        entity_id: sensor.time
+        friendly_name_template: >
+          {% if states('sensor.unavailable_sensors') | int == 0 %}
+            Sensors All Available
+          {% else %}
+            Sensors Are Unavailable
+          {% endif %}
+        icon_template: >-
+          {% if states('sensor.unavailable_sensors') | int == 0 %}
+            mdi:thumb-up
+          {% else %}
+            mdi:thumb-down
+          {% endif %}
+        value_template: >
+          {% set ignored_sensors = state_attr('group.ignored_sensors', 'entity_id') %}
+          {% set unavail =  states.sensor | selectattr('state', 'eq', 'unavailable')
+                                          | rejectattr('entity_id', 'in', ignored_sensors)
+                                          | map(attribute='name')
+                                          | list
+                                          | length  %}
+          {{ unavail }}
+        attribute_templates:
+          sensor_names: >
+            {% set ignored_sensors = state_attr('group.ignored_sensors', 'entity_id') %}
+            {% set sensor_names =  states.sensor  | selectattr('state', 'eq', 'unavailable')
+                                                  | rejectattr('entity_id', 'in', ignored_sensors)
+                                                  | map(attribute='name')
+                                                  | list
+                                                  | join(', ') %}
+            {{ sensor_names }}
+          sensor_entity_ids: >
+            {% set ignored_sensors = state_attr('group.ignored_sensors', 'entity_id') %}
+            {% set sensor_ids =  states.sensor  | selectattr('state', 'eq', 'unavailable')
+                                                  | rejectattr('entity_id', 'in', ignored_sensors)
+                                                  | map(attribute='entity_id')
+                                                  | list
+                                                  | join(', ') %}
+            {{ sensor_ids }}
+
+
+group:
+  ignored_sensors:
+    entities:
+
+
+automation:
+  - id: sensor_unavailable_notification
+    alias: "Sensor Unavailable Notification"
+    description: "Send notification when sensor goes offline."
+
+    trigger:
+      # run whenever unavailable sensors sensor state changes
+      - platform: state
+        entity_id: sensor.unavailable_sensors
+
+    condition:
+      # only run if the number of unavailable sensors had gone up
+      - condition: template
+        value_template: "{{ trigger.to_state.state | int > trigger.from_state.state | int }}"
+
+    action:
+      # wait 30 seconds before rechecking sensor state
+      - delay:
+          seconds: 30
+          
+      # make sure the sensor is updated before we check the state
+      - service: homeassistant.update_entity
+        entity_id: sensor.unavailable_sensors
+        
+      # only continue if current number of sensors is equal or more than the number when triggered
+      - condition: template
+        value_template: "{{ states('sensor.unavailable_sensors') | int >= trigger.to_state.state | int }} "
+
+      # create a persistent notification
+      - service: notify.mobile_app_iphone_di_lorenzo
+        data:
+          title: "Sensor Unavailable"
+          message: "### Unavailable Sensors: {{ '\n' + state_attr('sensor.unavailable_sensors','sensor_names').split(', ') | join('\n') }}"
+          #notification_id: 'sensor_alert'
+  - id: scaldabagno_unavailable_restart
+    alias: "Scaldabagno not available"
+    description: "Restart when Scaldabagno goes unavailable for 2 minutes"
+
+    trigger:
+      # run whenever unavailable sensors sensor state changes
+      - platform: state
+        entity_id: switch.scaldabagno
+        to: 'unavailable'
+
+    action:
+      # wait 30 seconds before rechecking sensor state
+      - delay:
+          seconds: 180 #waits 3 minutes
+          
+      # make sure the sensor is updated before we check the state
+      - service: homeassistant.update_entity
+        entity_id: switch.scaldabagno
+        
+      # only continue if scaldabagno is still unavailable
+      - condition: template
+        value_template: "{{ is_state('switch.scaldabagno','unavailable') }}"
+
+      # create a persistent notification
+      - service: homeassistant.restart
+       
+
+
+  - id: dismiss_sensor_unavailable_notification
+    alias: "Dismiss Sensor Unavailable Notification"
+    description: "Send notification when sensor goes offline."
+
+    trigger:
+      # run when there are no more unavailable
+      - platform: numeric_state
+        entity_id: sensor.unavailable_sensors
+        below: 1
+
+    action:
+      # dismiss the persistent notification
+      - service: persistent_notification.dismiss
+        data:
+          notification_id: 'sensor_alert'

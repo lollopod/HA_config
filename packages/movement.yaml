@@ -1,0 +1,24 @@
+automation:
+# Notify when Isa leaves the office and Lorenzo is home
+  - alias: 'Isa leaves Notaio notification'
+    trigger:
+      platform: zone
+      event: leave
+      zone: zone.Notaio
+      entity_id: person.isa
+    condition: 
+      - condition: state
+        entity_id: person.lorenzo_campioni
+        state: 'home'
+      - condition: or
+        conditions: 
+        - condition: time
+          after: '12:00'
+          before: '14:00'
+        - condition: time
+          after: '17:00'
+          before: '19:00'
+    action:
+      service: notify.mobile_app_iphone
+      data:
+        message: 'Isa left the office'

@@ -23,7 +23,7 @@
   initial_state: 'on'
   trigger: 
   - platform: state
-    entity_id: device_tracker.iphonedaisa
+    entity_id: device_tracker.iphonedaisa_2
   condition:
     - condition: template
       value_template: "{{ not is_state('device_tracker.iphonedaisa','home') }}"
@@ -35,7 +35,7 @@
   alias: 'lorenzo on the move'
   trigger: 
    - platform: state
-     entity_id: device_tracker.iphone_di_lorenzo
+     entity_id: person.lorenzo_campioni
   condition:
     - condition: template
       value_template: "{{ not is_state('device_tracker.iphone_di_lorenzo','home') }}"
@@ -58,3 +58,18 @@
   action:
     - service: homeassistant.toggle
       entity_id: input_boolean.sunset_approaching
+      
+
+- id: calendar_notification
+  alias: "Calendar Notification"
+  trigger:
+    platform: state
+    entity_id: calendar.nido
+    to: 'on'
+
+  action:
+      - service: notify.mobile_app_iphone_di_lorenzo
+        data:
+          title: "Nido Calendar Event"
+          message: "{{ state_attr('calendar.nido','message') }}"
+        

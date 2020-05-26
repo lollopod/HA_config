@@ -1,24 +1,25 @@
 import logging
-from typing import Optional, Any
+from typing import Any, Optional
 
-from homeassistant.components.fan import FanEntity, SUPPORT_SET_SPEED
+from homeassistant.components.fan import SUPPORT_SET_SPEED, FanEntity
 from meross_iot.cloud.devices.humidifier import GenericHumidifier, SprayMode
 from meross_iot.manager import MerossManager
-from meross_iot.meross_event import DeviceOnlineStatusEvent, HumidifierSpryEvent
+from meross_iot.meross_event import (DeviceOnlineStatusEvent,
+                                     HumidifierSpryEvent)
 
-from .common import DOMAIN, MANAGER, AbstractMerossEntityWrapper, cloud_io, HA_FAN
+from .common import (DOMAIN, HA_FAN, MANAGER, ConnectionWatchDog, cloud_io)
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class MerossSmartHumidifier(FanEntity, AbstractMerossEntityWrapper):
+class MerossSmartHumidifier(FanEntity):
     """
     At the time of writing, Homeassistant does not offer any specific device implementation that we can extend
     for implementing the smart humidifier. We'll exploit the fan entity to do so
     """
 
     def __init__(self, device: GenericHumidifier):
-        super().__init__(device)
+        self._device = device
         self._id = device.uuid
         self._device_name = device.name
 
@@ -50,20 +51,13 @@ class MerossSmartHumidifier(FanEntity, AbstractMerossEntityWrapper):
 
         self.schedule_update_ha_state(False)
 
-    @cloud_io
+    @cloud_io()
     def update(self):
         state = self._device.get_status(True)
         self._is_online = self._device.online
 
         if self._is_online:
             self._is_on, self._humidifier_mode = self.parse_spry_mode(self._device.get_spray_mode())
-
-    def force_state_update(self, ui_only=False):
-        if not self.enabled:
-            return
-
-        force_refresh = not ui_only
-        self.schedule_update_ha_state(force_refresh=force_refresh)
 
     async def async_added_to_hass(self) -> None:
         self._device.register_event_callback(self.device_event_handler)
@@ -94,17 +88,17 @@ class MerossSmartHumidifier(FanEntity, AbstractMerossEntityWrapper):
         """Get the list of available speeds."""
         return [e.name for e in SprayMode if e != SprayMode.OFF]
 
-    @cloud_io
+    @cloud_io()
     def set_speed(self, speed: str) -> None:
         mode = SprayMode[speed]
         self._device.set_spray_mode(mode)
 
-    @cloud_io
+    @cloud_io()
     def set_direction(self, direction: str) -> None:
         # Not supported
         pass
 
-    @cloud_io
+    @cloud_io()
     def turn_on(self, speed: Optional[str] = None, **kwargs) -> None:
         # Assume the user wants to trigger the last mode
         mode = self._humidifier_mode
@@ -117,7 +111,7 @@ class MerossSmartHumidifier(FanEntity, AbstractMerossEntityWrapper):
 
         self._device.set_spray_mode(mode)
 
-    @cloud_io
+    @cloud_io()
     def turn_off(self, **kwargs: Any) -> None:
         self._device.set_spray_mode(SprayMode.OFF)
 
@@ -158,6 +152,11 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             hass.data[DOMAIN][HA_FAN][h.unique_id] = h
 
         return fan_devices
+
+    # Register a connection watchdog to notify devices when connection to the cloud MQTT goes down.
+    manager = hass.data[DOMAIN][MANAGER]  # type:MerossManager
+    watchdog = ConnectionWatchDog(hass=hass, platform=HA_FAN)
+    manager.register_event_handler(watchdog.connection_handler)
 
     devices = await hass.async_add_executor_job(sync_logic)
     async_add_entities(devices)

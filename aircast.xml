@@ -15,6 +15,12 @@
 <util_log>warn</util_log>
 <log_limit>-1</log_limit>
 <device>
+<udn>37fa9e8905a2f47ece66b5331a26d31b</udn>
+<name>mi box+</name>
+<mac>cc:cc:c8:4d:94:4c</mac>
+<enabled>1</enabled>
+</device>
+<device>
 <udn>fe5b9380a5cae6617a51e59152fffd22</udn>
 <name>Nest mini+</name>
 <mac>cc:cc:3a:30:41:73</mac>

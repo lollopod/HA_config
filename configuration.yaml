@@ -14,6 +14,7 @@ homeassistant:
   time_zone: Europe/Rome
   # Customization file
   customize: !include customize.yaml
+  packages: !include_dir_named packages
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
@@ -54,7 +55,15 @@ input_boolean:
   sunset_approaching:
     name: Sunset Approaching
     initial: off
-    icon: mdi:sun
+    icon: mdi:weather-sunset
+  bedtime:
+    name: Bedtime
+    initial: off
+    icon: mdi:bed
+  wake_up: 
+    name: Wake Up
+    initial: off
+    icon: mdi:weather-sunset-up
 
 input_datetime:
   # The Alarm Time input by the User
@@ -124,9 +133,9 @@ light:
 #      model: 'color1'
 #switches section 
 
-meross_cloud:
-  username: !secret meross_user
-  password: !secret meross_pw
+#meross_cloud:
+#  username: !secret meross_user
+#  password: !secret meross_pw
 
 sonoff:
   username: !secret sonoff_user
@@ -294,10 +303,42 @@ google_assistant:
   service_account: !include google-service-account.json
   exposed_domains:
     - light
+  entity_config:
+    input_boolean.bedtime:
+      expose: true
+      room: Camera da Letto
+    input_boolean.wake_up:
+      expose: true
+      room: Camera da Letto
 
 # Example configuration.yaml entry
 weather:
   - platform: openweathermap
     api_key: !secret owm_api_key
-
+    
+recorder:
+  exclude:
+    domains:
+      - sensor
+      - switch
+      - media_player
+      - automation
+      - input_boolean
+      - device_tracker
+  include:
+    entities:
+      - sensor.family_status
+      - sensor.humidity_158d0003203bba
+      - sensor.illumination_34ce0085a83c
+      - sensor.temperature_158d0003203bba
+      - sensor.isadora_to_home
+      - sensor.lorenzo_to_home
+      - sensor.scaldabagno
+      - sensor.termoarredo
+      - switch.scaldabagno
+      - switch.termoarredo
+google:
+  client_id: !secret gcal_client_id
+  client_secret: !secret gcal_client_secret
+  
  
