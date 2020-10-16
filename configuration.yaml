@@ -123,13 +123,13 @@ light:
     entity_id: switch.plug_158d000154a757
 #  - platform: yeelight
 #    devices:
-#      192.168.1.38:
+#      192.168.188.38:
 #        name: Piantana
         
-#yeelight:
-#  devices:
-#    192.168.1.38:
-#      name: 'Piantana'
+yeelight:
+  devices:
+    192.168.188.38:
+      name: 'Piantana'
 #      model: 'color1'
 #switches section 
 
@@ -150,12 +150,12 @@ sonoff:
 
           
 sensor:
-  - platform: template
-    sensors:
-      appliances_combined_state:
-        value_template: '{{ "on" if (is_state("switch.termoarredo", "on") and is_state("switch.scaldabagno", "on")) else "off" }}'
-        friendly_name: "Stato Prese Switchable"
-  # Tracking entity to home
+#  - platform: template
+#    sensors:
+#      appliances_combined_state:
+#        value_template: '{{ "on" if (is_state("switch.termoarredo", "on") and is_state("switch.scaldabagno", "on")) else "off" }}'
+#        friendly_name: "Stato Prese Switchable"
+# Tracking entity to home
 #  - platform: waze_travel_time
 #    name: "Lorenzo to home"
 #    origin: person.lorenzo_campioni
@@ -310,6 +310,18 @@ google_assistant:
     input_boolean.wake_up:
       expose: true
       room: Camera da Letto
+    switch.wol_imac_switch:
+      expose: true
+      room: Camera da Letto
+    sensor.temperature_158d0003203bba:
+      expose: true
+      room: Soggiorno
+    sensor.humidity_158d0003203bba:
+      expose: true
+      room: Soggiorno
+    sensor.family_status:
+      expose: true
+      room: Soggiorno
 
 # Example configuration.yaml entry
 weather:
@@ -337,6 +349,9 @@ recorder:
       - sensor.termoarredo
       - switch.scaldabagno
       - switch.termoarredo
+      - switch.plants_water_switch
+      - sensor.plants_measurement
+      - sensor.rosmarino
 google:
   client_id: !secret gcal_client_id
   client_secret: !secret gcal_client_secret
