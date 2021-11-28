@@ -1,0 +1,49 @@
+api:
+
+alexa:
+  smart_home:
+    filter:
+      exclude_domains:
+        - alarm_control_panel
+        - automation
+        - binary_sensor
+        - calendar
+        - climate
+        - device_tracker
+        - group
+        - input_boolean
+        - input_datetime
+        - persistent_notification
+        - person
+        - sensor
+        - sun
+        - switch
+        - weather
+        - zone
+      
+      include_domains:
+        - light
+        - media_player
+        - script
+      include_entities:
+        - climate.termostato_cucina
+        - climate.termostato_camera
+        - input_boolean.bedtime
+        - input_boolean.wake_up
+        - sensor.temperature_158d0003203bba
+        - sensor.humidity_158d0003203bba
+        - sensor.temperatura_camera
+        - sensor.temperatura_cucina
+        - switch.scaldabagno
+        - switch.termoarredo
+    entity_config:
+      climate.termostato_cucina:
+        name: "Termostato Cucina"
+      sensor.temperature_158d0003203bba:
+        name: "Temperatura Cucina"
+      sensor.humidity_158d0003203bba:
+        name: "Umidità Cucina"
+      switch.scaldabagno:
+        name: "Scaldabagno"
+      switch.termoarredo:
+        name: "Termoarredo"

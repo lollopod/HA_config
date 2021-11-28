@@ -1,0 +1,74 @@
+esphome:
+  name: intercom
+  platform: ESP32
+  board: nodemcu-32s
+  on_boot:
+    priority: -200
+    then:
+      - delay: 10s
+      - logger.log: "Checking sleep"
+      - lambda: |-
+          if(id(prevent_deep_sleep_sensor).state) {
+            ESP_LOGD("main", "Remote prevent sleep");
+            id(deep_sleep_1).prevent_deep_sleep();
+          } else {
+            ESP_LOGD("main", "Remote allow sleep");
+          }
+      - logger.log: "Sleep checked"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_pw
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Intercom Fallback Hotspot"
+    password: "oJ4sPtt8tuBD"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+deep_sleep:
+  run_duration: 5min
+  sleep_duration:
+    days: 1
+  wakeup_pin:
+    number: GPIO32
+#    inverted: True
+#    mode: INPUT_PULLUP
+  wakeup_pin_mode: KEEP_AWAKE
+  id: deep_sleep_1
+  
+binary_sensor:
+  - platform: homeassistant
+    id: prevent_deep_sleep_sensor
+    name: Prevent Deep Sleep Sensor
+    entity_id: input_boolean.prevent_deep_sleep
+    internal: true
+    on_press:
+      then:
+        - logger.log: "Prevent deep sleep pressed"
+        - deep_sleep.prevent: deep_sleep_1
+    on_state:
+      then:
+        - delay: 4s
+        - logger.log: "Prevent deel sleep state"
+          
+#sensor:
+#  - platform: adc
+#    pin: VCC
+#    name: "VCC Voltage"
+#.   id: battery_voltage
+#  - platform: template
+#    name: "battery_level"
+#    unit_of_measurement: '%'
+#    update_interval: 5s
+#    lambda: |-
+#      return ((id(battery_voltage).state /3.30) * 100.00);

@@ -1,75 +1,91 @@
-- alias: 'Start HomeKit'
+- alias: Start HomeKit
   trigger:
-    - platform: homeassistant
-      event: start
+  - platform: homeassistant
+    event: start
   action:
-    - delay: 00:05  # Waits 5 minutes
-    - service: homekit.start
-
-
-
-- alias: 'Continuous Integration'
+  - delay: 00:05
+  - service: homekit.start
+  id: 964ebb771d0b477bb32c6cb576797155
+- alias: Continuous Integration
   trigger:
-    - platform: state
-      entity_id: sensor.travis_build_status
-      from: 'started' 
-      to: 'pass'
+  - platform: state
+    entity_id: sensor.travis_build_status
+    from: started
+    to: pass
   action:
-    - service: hassio.addon_start
-      data:
-        addon: core_git_pull
-
-- alias: 'isadora on the move'
+  - service: hassio.addon_start
+    data:
+      addon: core_git_pull
+  id: e3103b87549f417595e1e1a63a337829
+- alias: isadora on the move
   initial_state: 'on'
-  trigger: 
+  trigger:
   - platform: state
     entity_id: device_tracker.iphonedaisa_2
   condition:
-    - condition: template
-      value_template: "{{ not is_state('device_tracker.iphonedaisa','home') }}"
+  - condition: template
+    value_template: '{{ not is_state(''device_tracker.iphonedaisa'',''home'') }}'
   action:
-    - service: homeassistant.update_entity
-      entity_id: sensor.isadora_to_home
-      
+  - service: homeassistant.update_entity
+    entity_id: sensor.isadora_to_home
+  id: b1a677c80c594a3f976871479fed1868
 - initial_state: 'on'
-  alias: 'lorenzo on the move'
-  trigger: 
-   - platform: state
-     entity_id: person.lorenzo_campioni
+  alias: lorenzo on the move
+  trigger:
+  - platform: state
+    entity_id: person.lorenzo_campioni
   condition:
-    - condition: template
-      value_template: "{{ not is_state('device_tracker.iphone_di_lorenzo','home') }}"
+  - condition: template
+    value_template: '{{ not is_state(''device_tracker.iphone_di_lorenzo'',''home'')
+      }}'
   action:
-    - service: homeassistant.update_entity
-      entity_id: sensor.lorenzo_to_home
-- alias: 'NodeRed sunset begin'      
+  - service: homeassistant.update_entity
+    entity_id: sensor.lorenzo_to_home
+  id: 2c3e6b71d8ca44948c2308a5d466d75c
+- alias: NodeRed sunset begin
   trigger:
-    - platform: sun
-      event: sunset
-      offset: "-00:30:00"
+  - platform: sun
+    event: sunset
+    offset: -00:30:00
   action:
-    - service: homeassistant.toggle
-      entity_id: input_boolean.sunset_approaching
-- alias: 'NodeRed sunset end'      
+  - service: homeassistant.toggle
+    entity_id: input_boolean.sunset_approaching
+  id: 77be35dfea7c422a8a46bf0209ef470a
+- alias: NodeRed sunset end
   trigger:
-    - platform: sun
-      event: sunset
-      offset: "-00:20:00"
+  - platform: sun
+    event: sunset
+    offset: -00:20:00
   action:
-    - service: homeassistant.toggle
-      entity_id: input_boolean.sunset_approaching
-      
-
+  - service: homeassistant.toggle
+    entity_id: input_boolean.sunset_approaching
+  id: 650af3edcf2f4e9f98f63501112be0c0
 - id: calendar_notification
-  alias: "Calendar Notification"
+  alias: Calendar Notification
   trigger:
     platform: state
     entity_id: calendar.nido
     to: 'on'
-
   action:
-      - service: notify.mobile_app_iphone_di_lorenzo
-        data:
-          title: "Nido Calendar Event"
-          message: "{{ state_attr('calendar.nido','message') }}"
-        
+  - service: notify.mobile_app_iphone_di_lorenzo
+    data:
+      title: Nido Calendar Event
+      message: '{{ state_attr(''calendar.nido'',''message'') }}'
+- id: '1611422769316'
+  alias: Scrivania scalda camera
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.desk_occupied
+    to: 'on'
+    for: 5 minutes
+  condition:
+  - condition: state
+    entity_id: sensor.family_status
+    state: HOME
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: '21'
+    entity_id: climate.termostato_camera
+  mode: single

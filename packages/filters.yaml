@@ -1,0 +1,10 @@
+#sensor:
+#    platform: filter
+#    name: "Presenza Scrivania Filtrata"
+#    entity_id: sensor.presenza_scrivania_filtrata
+#    filters:
+#    - filter: lowpass
+#      time_constant: 10
+#    - filter: time_simple_moving_average
+#      window_size: "00:02"
+#      precision: 2

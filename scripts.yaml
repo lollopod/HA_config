@@ -1,6 +1,51 @@
-
 pullrestart:
   alias: Pull from git and restart HA
   sequence:
-    - service: shell_command.git_pull
-    - service: homeassistant.restart
+  - service: shell_command.git_pull
+  - service: homeassistant.restart
+riavvia_mi_box:
+  alias: Riavvia Mi Box
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.mi_box_s
+      command: reboot
+  mode: single
+riavvia_duo:
+  alias: Riavvia Duo
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.mi_box_s
+      command: reboot
+  - delay: 00:00:05
+  - wait_for_trigger:
+    - platform: state
+      entity_id: media_player.mi_box_s
+      for: '2'
+      to: idle
+    timeout: 00:05:00
+  - service: media_player.select_source
+    data:
+      entity_id: media_player.mi_box_s
+      source: com.google.android.apps.tachyon
+  mode: single
+riavvia_mi_tv:
+  alias: Riavvia Lolita
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.mi_box_s
+      command: reboot
+  - delay: 00:00:05
+  - wait_for_trigger:
+    - platform: state
+      entity_id: media_player.mi_box_s
+      to: idle
+      for: '2'
+    timeout: 00:05
+  - service: media_player.select_source
+    data:
+      entity_id: media_player.mi_box_s
+      source: com.google.android.tv
+  mode: single

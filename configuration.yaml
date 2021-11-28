@@ -7,7 +7,7 @@ homeassistant:
   latitude: !secret latitude
   longitude: !secret longitude
   # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: 0
+  elevation: 6
   # metric for Metric, imperial for Imperial
   unit_system: metric
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -27,8 +27,9 @@ hacs:
   token: !secret hacs_token
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
-  base_url: https://lollopod-ha.webrelay.io
-
+  base_url: https://lollopod.duckdns.org
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
 # Text to speech
 tts:
   - platform: google_translate
@@ -140,11 +141,11 @@ yeelight:
 sonoff:
   username: !secret sonoff_user
   password: !secret sonoff_pw
-  scan_interval: 60
-  grace_period: 600
-  api_region: 'eu'
-  entity_prefix: True
-  debug: False
+#  scan_interval: 60
+#  grace_period: 600
+#  api_region: 'eu'
+#  entity_prefix: True
+#  debug: False
 
 
 
@@ -241,11 +242,11 @@ switch:
             - switch.scaldabagno
 ############# Climate section 
   - platform: broadlink
-    host: 192.168.188.39
+#    host: 192.168.188.39
     mac: !secret broadlink_mac
-    timeout: 30
-    friendly_name: "Dispositivo Broadlink"
-    type: rm_mini
+#    timeout: 30
+#    friendly_name: "Dispositivo Broadlink"
+#    type: rm_mini
     switches:
       learner:
         friendly_name: "Learner"
@@ -269,20 +270,39 @@ climate:
     heater: switch.kitchen_heater
     cooler: switch.kitchen_cooler
     target_sensor: sensor.temperature_158d0003203bba
-    min_cycle_duration: 00:15:00
+    min_cycle_duration: 00:10:00
     away_temp: 17
     cold_tolerance: 1
-    hot_tolerance: 1
+    hot_tolerance: 0.5
     precision: 0.1
+    
+  - platform: dualmode_generic
+    name: Termostato Camera
+    heater: switch.bedroom_heat
+    cooler: switch.kitchen_cooler
+    target_sensor: sensor.temperatura_camera
+    min_cycle_duration: 00:10:00
+    away_temp: 17
+    cold_tolerance: 0.5
+    hot_tolerance: 0.5
+    precision: 0.1
+
 #ir file for media player to be retreived from broadlink app
 media_player:
   - platform: smartir
     name: TV
     device_code: 8000
-    controller_data: 192.168.188.39
-#  - platform: androidtv
-#    name: Mi Box S
-#    host: 192.168.188.41
+    controller_data: remote.rmmini_remote
+  - platform: androidtv
+    name: Mi Box S
+    host: 192.168.188.41
+    #device_class: firetv
+    adb_server_ip: 127.0.0.1
+    #adb_server_port: 5037
+    #get_sources: false
+    state_detection_rules:
+      'com.amazon.tv.launcher':
+        - 'standby'
 
 #n26:
 #  username: !secret n26_user
@@ -303,6 +323,7 @@ google_assistant:
   service_account: !include google-service-account.json
   exposed_domains:
     - light
+    - script
   entity_config:
     input_boolean.bedtime:
       expose: true
@@ -313,15 +334,34 @@ google_assistant:
     switch.wol_imac_switch:
       expose: true
       room: Camera da Letto
+      name: "iMac"
     sensor.temperature_158d0003203bba:
       expose: true
-      room: Soggiorno
+      room: Cucina
+      name: "Temperatura Cucina" 
     sensor.humidity_158d0003203bba:
       expose: true
-      room: Soggiorno
+      room: Cucina
+      name: "Umidità Cucina"
     sensor.family_status:
       expose: true
-      room: Soggiorno
+      room: Cucina
+    climate.termostato_cucina:
+      expose: true
+      room: Cucina
+      name: "Termostato Cucina"
+    climate.termostato_camera:
+      expose: true
+      room: Camera da Letto
+      name: "Termostato Camera"
+    sensor.temperatura_camera:
+      expose: true
+      room: Camera da Letto
+      name: "Temperatura Camera" 
+    sensor.umidita_camera:
+      expose: true
+      room: Camera da Letto
+      name: "Umidità Camera"
 
 # Example configuration.yaml entry
 weather:
@@ -336,7 +376,11 @@ recorder:
       - media_player
       - automation
       - input_boolean
+      - input_number
       - device_tracker
+      - persistent_notification
+      - zone
+      
   include:
     entities:
       - sensor.family_status
@@ -352,6 +396,12 @@ recorder:
       - switch.plants_water_switch
       - sensor.plants_measurement
       - sensor.rosmarino
+      - sensor.temperatura_camera
+      - sensor.umidita_camera
+      - sensor.presenza_scrivania
+      - sensor.distanza_scrivania
+      - media_player.mi_box_s
+#      - sensor.presenza_scrivania_nodered
 google:
   client_id: !secret gcal_client_id
   client_secret: !secret gcal_client_secret

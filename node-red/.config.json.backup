@@ -1773,6 +1773,99 @@
      "file": "/config/node-red/node_modules/node-red-contrib-ifttt/nodes/ifttt.js"
     }
    }
+  },
+  "node-red-contrib-broadlink-control": {
+   "name": "node-red-contrib-broadlink-control",
+   "version": "2.1.2",
+   "local": false,
+   "nodes": {
+    "rm": {
+     "name": "rm",
+     "types": [
+      "rmdevice",
+      "RM"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-broadlink-control",
+     "file": "/config/node-red/node_modules/node-red-contrib-broadlink-control/nodes/RMNode.js"
+    },
+    "rmreceiver": {
+     "name": "rmreceiver",
+     "types": [
+      "rmdevice2",
+      "RMReceiver"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-broadlink-control",
+     "file": "/config/node-red/node_modules/node-red-contrib-broadlink-control/nodes/RMReceiverNode.js"
+    },
+    "eAir": {
+     "name": "eAir",
+     "types": [
+      "a1device",
+      "A1"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-broadlink-control",
+     "file": "/config/node-red/node_modules/node-red-contrib-broadlink-control/nodes/A1Node.js"
+    },
+    "smartplug": {
+     "name": "smartplug",
+     "types": [
+      "sp2device",
+      "SP2"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-broadlink-control",
+     "file": "/config/node-red/node_modules/node-red-contrib-broadlink-control/nodes/SP2Node.js"
+    },
+    "mp": {
+     "name": "mp",
+     "types": [
+      "mp1device",
+      "MP1"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-broadlink-control",
+     "file": "/config/node-red/node_modules/node-red-contrib-broadlink-control/nodes/MP1Node.js"
+    },
+    "s1c": {
+     "name": "s1c",
+     "types": [
+      "s1cdevice",
+      "S1C"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-broadlink-control",
+     "file": "/config/node-red/node_modules/node-red-contrib-broadlink-control/nodes/S1CNode.js"
+    },
+    "discover": {
+     "name": "discover",
+     "types": [
+      "Discover"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-broadlink-control",
+     "file": "/config/node-red/node_modules/node-red-contrib-broadlink-control/nodes/DiscoverNode.js"
+    },
+    "setup": {
+     "name": "setup",
+     "types": [
+      "Setup"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-broadlink-control",
+     "file": "/config/node-red/node_modules/node-red-contrib-broadlink-control/nodes/SetupNode.js"
+    }
+   }
   }
  },
  "users": {
@@ -1787,7 +1880,7 @@
      "view-show-tips": false
     }
    },
-   "menu-menu-item-sidebar": true
+   "menu-menu-item-sidebar": false
   }
  }
 }

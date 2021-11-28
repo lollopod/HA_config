@@ -5,6 +5,8 @@
     "private": true,
     "dependencies": {
         "node-red-contrib-bool-gate": "~1.0.2",
+        "node-red-contrib-broadlink-control": "~2.1.2",
+        "node-red-contrib-deglitch": "~1.0.2",
         "node-red-contrib-finite-statemachine": "~0.2.10",
         "node-red-contrib-float": "~1.0.3",
         "node-red-contrib-ifttt": "~0.3.1",

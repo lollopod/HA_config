@@ -9,11 +9,27 @@
 <artwork></artwork>
 <drift>0</drift>
 <metadata>1</metadata>
+<flush>1</flush>
 </common>
 <main_log>info</main_log>
 <cast_log>info</cast_log>
 <util_log>warn</util_log>
 <log_limit>-1</log_limit>
+<max_players>32</max_players>
+<ports>0:0</ports>
+<binding>?</binding>
+<device>
+<udn>56fafa4977e8b71c4e93fa7055a8d448</udn>
+<name>mi box+</name>
+<mac>cc:cc:9d:ef:2e:13</mac>
+<enabled>1</enabled>
+</device>
+<device>
+<udn>B2ACD126-DE36-4701-A16E-BEE5BF066A4C</udn>
+<name>Tutto+</name>
+<mac>cc:cc:b6:4a:0b:4c</mac>
+<enabled>1</enabled>
+</device>
 <device>
 <udn>37fa9e8905a2f47ece66b5331a26d31b</udn>
 <name>mi box+</name>
