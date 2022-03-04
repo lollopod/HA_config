@@ -49,3 +49,29 @@ riavvia_mi_tv:
       entity_id: media_player.mi_box_s
       source: com.google.android.tv
   mode: single
+beamer_focus:
+  sequence:
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.beamer_focus_ongoing
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.beamer
+      command: 'adb shell am start -a com.fengmi.projector.imaging.action.START_FOCUS '
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: shell_command.beamer_switch_hdmi
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.beamer_focus_ongoing
+  mode: single
+  alias: Beamer focus
+  icon: mdi:audio-video

@@ -19,6 +19,12 @@
 <ports>0:0</ports>
 <binding>?</binding>
 <device>
+<udn>5f2469cf92c927050a9e3b8df4f54e9e</udn>
+<name>SHIELD+</name>
+<mac>cc:cc:ff:4f:30:b5</mac>
+<enabled>1</enabled>
+</device>
+<device>
 <udn>56fafa4977e8b71c4e93fa7055a8d448</udn>
 <name>mi box+</name>
 <mac>cc:cc:9d:ef:2e:13</mac>

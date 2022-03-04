@@ -89,3 +89,47 @@
       temperature: '21'
     entity_id: climate.termostato_camera
   mode: single
+- id: '1642777137505'
+  alias: Beamer auto off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: media_player.shield
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  condition:
+  - condition: state
+    entity_id: media_player.shield
+    state: 'off'
+  - condition: state
+    entity_id: script.beamer_focus
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.beamer_focus_ongoing
+    state: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  action:
+  - service: switch.turn_off
+    target:
+      entity_id: switch.beamer
+  mode: single
+- id: '1643131279108'
+  alias: Router nightly reboot
+  description: ''
+  trigger:
+  - platform: time
+    at: 02:42
+  condition: []
+  action:
+  - service: fritz.reboot
+    data:
+      device_id: 3e8034983d5caa5ce048e1a890f49b75
+  mode: single

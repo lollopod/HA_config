@@ -4,10 +4,10 @@ from numbers import Number
 from homeassistant.const import (
     CONF_STATE,
     STATE_HOME,
-    STATE_LOCKED,
     STATE_OFF,
     STATE_ON,
     STATE_OPEN,
+    STATE_UNLOCKED,
 )
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 
@@ -22,7 +22,9 @@ async def async_setup_entry(hass, config_entry, async_add_devices):
         await _async_setup_entity(hass, config, async_add_devices)
 
     async_dispatcher_connect(
-        hass, NODERED_DISCOVERY_NEW.format(CONF_BINARY_SENSOR), async_discover,
+        hass,
+        NODERED_DISCOVERY_NEW.format(CONF_BINARY_SENSOR),
+        async_discover,
     )
 
 
@@ -42,7 +44,7 @@ class NodeRedBinarySensor(NodeRedEntity):
         STATE_ON,
         STATE_OPEN,
         STATE_HOME,
-        STATE_LOCKED,
+        STATE_UNLOCKED,
     )
 
     def __init__(self, hass, config):

@@ -23,21 +23,24 @@ default_config:
 #  ignore:
 #    - yeelight
 
-hacs:
-  token: !secret hacs_token
+#hacs:
+#  token: !secret hacs_token
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
-  base_url: https://lollopod.duckdns.org
-  ssl_certificate: /ssl/fullchain.pem
-  ssl_key: /ssl/privkey.pem
+  use_x_forwarded_for: true 
+  trusted_proxies: 
+    - 172.30.33.0/24
+#  base_url: https://lollopod.duckdns.org
+#  ssl_certificate: /ssl/fullchain.pem
+#  ssl_key: /ssl/privkey.pem
 # Text to speech
 tts:
   - platform: google_translate
 
-group: !include groups.yaml
+#group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
-homekit: !include homekit.yaml
+#homekit: !include homekit.yaml
 
 #!include interface_entities.yaml
 input_boolean:
@@ -108,20 +111,26 @@ lovelace:
 
 #xiaomi gateway
 
-xiaomi_aqara:
- discovery_retry: 10
- gateways:
-   - key: !secret xiaomi_gw_key
+#xiaomi_aqara:
+# discovery_retry: 10
+# gateways:
+#   - key: !secret xiaomi_gw_key
 
 #lights section 
 
 light:
   - platform: switch
-    name: Comodino Lorenzo
-    entity_id: switch.sonoff_10008eab7f
+    name: Il Natale
+    entity_id: switch.meross_plug_1
   - platform: switch
-    name: Comodino Isa
-    entity_id: switch.plug_158d000154a757
+    name: Divano
+    entity_id: switch.sonoff_10008f5275
+#  - platform: switch
+#    name: Comodino Lorenzo
+#    entity_id: switch.sonoff_10008eab7f
+#  - platform: switch
+#    name: Comodino Isa
+#    entity_id: switch.plug_158d000154a757
 #  - platform: yeelight
 #    devices:
 #      192.168.188.38:
@@ -141,13 +150,11 @@ yeelight:
 sonoff:
   username: !secret sonoff_user
   password: !secret sonoff_pw
-#  scan_interval: 60
-#  grace_period: 600
-#  api_region: 'eu'
-#  entity_prefix: True
-#  debug: False
-
-
+  scan_interval: 60
+  grace_period: 600
+  api_region: 'eu'
+  entity_prefix: True
+  debug: False
 
           
 sensor:
@@ -240,6 +247,21 @@ switch:
           entity_id:
             - switch.termoarredo
             - switch.scaldabagno
+      televisione:
+        friendly_name: "TV"
+        turn_on:
+          - service: media_player.turn_on
+            target:
+              entity_id: media_player.shield
+          - service: androidtv.adb_command
+            target:
+              entity_id: media_player.shield
+            data:
+              command: am start -a android.intent.action.VIEW -n com.google.android.tv/com.android.tv.MainActivity
+        turn_off:
+          service: media_player.turn_off
+          target:
+            entity_id: media_player.shield
 ############# Climate section 
   - platform: broadlink
 #    host: 192.168.188.39
@@ -260,49 +282,59 @@ switch:
         friendly_name: "Kitchen Heater"
         command_on: 'JgC8AXQ3EQwRKBELEQsRDBELDw4RCxELEQwQDRELEQwRKBELEQsRDBELEQwRCw8NESgPKhEoEQsSCxEoEQwQDBELEQwRCxEMDw0RCxEMEQsRDBELEQsQDg8NEQsRDBELEQwRCxELEA0RCxEMEQsRCxANEA0PDRANESgRJxEMEQsRDBAMEQsRAAFFdDcPDhEnEgwRCxELEQwPDREMEQsRCxEMEQsPDhEnEQwRCxANEQwRCxEMEQsPKhEoEScRDBELESgRCxEMDw0PDhELEA0PDg8NEQsRDBELEQwPDREoEQsRDA8pEQwRCxInEgsRDBELESgPKhEnESgRDBAMEQsRDBELEQwPDRELEgwRJxEoESgPKhEnEgsRKBELESgRKBELESgRKBELEQsQDRANEQsRDA8NEA0RCxELEgsRCw8OEScRKBEoEQsQDRANEQsRDBELEQwPDRELECkRKBEoEQsRDBELDw0RDBANDw0QDRELEQwRCxELEA0RCxEMEQsRKBELEQwRJxENEQsRCxEoEQwRCxELEQwRCxEMDw0RCxEMEQsQDREMEAwRDA8NEQsRDBEoDykRKBEoDyoRCxEMEQANBQAAAAAAAAAAAAAAAA'
         command_off: 'JgC8AXQ3EgoQKRIKEgsQDBILEQsPDRANDw0QDRILEgoSJxIKEgsQDBILEgoQDBANDyoSJhInEA0RDA8qEAwSChEMDw0QDRIKEgoQDQ8NEgsSChIKEQwQDQ8ODw0PDRANEgoSChILEAwQDQ8NEgoQDQ8NEwsQDA8NECkSJxAMEA0SChILEQsQAAFFeDQQDA8qEwoSCxAMDw0SCxIKEgsQDBIKEQwSChInEAwSCxILEAwSCxAMEA0PKhEnECkSChANEicQDA8NEgsSChANEgsQDBILEgoPDRILEgoSCxAMDw0QDQ8qEiYSJxANEgsQDBILEicQKBApEicQDBANEgoPDRILEgoSCxIKEA0QKRApEicSJxEnEgsSJhEMEicSJxELEicQKBILEQsQDRANEgoQDQ8NDw0QDQ8NEA0PDRIKEicSJxApEAwRDBILEgoRDBAMEA0PDRIKEicQKRInEgoQDBANDw0QDRANEgoQDQ8NEgsRCxAMEA0PDRILEAwSJxAMDw0RKBENDw0PDRApEgsPDQ8NEA0SChILDw0SChANDw0QDRILEAwSCw8NEgoRKBANDykQKRILECgQDQ8NDwANBQAAAAAAAAAAAAAAAA'
+  - platform: command_line
+    switches:
+      beamer:
+        command_on: echo "cannot do this"
+        command_off: curl "http://192.168.188.64:6095/controller?action=keyevent&keycode=power"
+        friendly_name: "Proiettore"
+#smartir: 
 
-smartir: 
+#climate:
 
-climate:
-
-  - platform: dualmode_generic
-    name: Termostato Cucina
-    heater: switch.kitchen_heater
-    cooler: switch.kitchen_cooler
-    target_sensor: sensor.temperature_158d0003203bba
-    min_cycle_duration: 00:10:00
-    away_temp: 17
-    cold_tolerance: 1
-    hot_tolerance: 0.5
-    precision: 0.1
+#  - platform: dualmode_generic
+#    name: Termostato Cucina
+#    heater: switch.kitchen_heater
+#    cooler: switch.kitchen_cooler
+#    target_sensor: sensor.temperature_158d0003203bba
+#    min_cycle_duration: 00:10:00
+#    away_temp: 17
+#    cold_tolerance: 1
+#    hot_tolerance: 0.5
+#    precision: 0.1
     
-  - platform: dualmode_generic
-    name: Termostato Camera
-    heater: switch.bedroom_heat
-    cooler: switch.kitchen_cooler
-    target_sensor: sensor.temperatura_camera
-    min_cycle_duration: 00:10:00
-    away_temp: 17
-    cold_tolerance: 0.5
-    hot_tolerance: 0.5
-    precision: 0.1
+#  - platform: dualmode_generic
+#    name: Termostato Camera
+#    heater: switch.bedroom_heat
+#    cooler: switch.kitchen_cooler
+#    target_sensor: sensor.temperatura_camera
+#    min_cycle_duration: 00:10:00
+#    away_temp: 17
+#    cold_tolerance: 0.5
+#    hot_tolerance: 0.5
+#    precision: 0.1
 
 #ir file for media player to be retreived from broadlink app
 media_player:
-  - platform: smartir
-    name: TV
-    device_code: 8000
-    controller_data: remote.rmmini_remote
+#  - platform: smartir
+#    name: TV
+#    device_code: 8000
+#    controller_data: remote.rmmini_remote
   - platform: androidtv
-    name: Mi Box S
-    host: 192.168.188.41
-    #device_class: firetv
-    adb_server_ip: 127.0.0.1
-    #adb_server_port: 5037
-    #get_sources: false
-    state_detection_rules:
-      'com.amazon.tv.launcher':
-        - 'standby'
+    name: shield
+    host: 192.168.188.63
+    screencap: false
+  - platform: androidtv
+    name: beamer
+    host: 192.168.188.64
+    screencap: false
+#    #device_class: firetv
+#    adb_server_ip: 127.0.0.1
+#    #adb_server_port: 5037
+#    #get_sources: false
+#    state_detection_rules:
+#      'com.amazon.tv.launcher':
+#        - 'standby'
 
 #n26:
 #  username: !secret n26_user
@@ -315,6 +347,7 @@ spotify:
 
 shell_command:
   git_pull: ./gitpull.sh
+  beamer_switch_hdmi : "curl http://192.168.188.64:6095/controller?action=changesource&source=HDMI1"
   
   
 google_assistant:
@@ -362,7 +395,22 @@ google_assistant:
       expose: true
       room: Camera da Letto
       name: "Umidità Camera"
-
+    media_player.shield:
+      expose: true
+      name: "Shield"
+    switch.televisione:
+      expose: true
+      name: "Televisione"
+      aliases:
+        - "TV"
+        - "Television"
+    script.beamer_focus:
+      expose: true
+      name: "Beamer Focus"
+      aliases:
+        - "Fuoco"
+        - "Metti a fuoco"
+        - "Focus"
 # Example configuration.yaml entry
 weather:
   - platform: openweathermap
@@ -401,6 +449,8 @@ recorder:
       - sensor.presenza_scrivania
       - sensor.distanza_scrivania
       - media_player.mi_box_s
+      - media_player.shield
+      - media_player.shield_cast
 #      - sensor.presenza_scrivania_nodered
 google:
   client_id: !secret gcal_client_id
