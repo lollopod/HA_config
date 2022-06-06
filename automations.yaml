@@ -133,3 +133,24 @@
     data:
       device_id: 3e8034983d5caa5ce048e1a890f49b75
   mode: single
+- id: '1649931941416'
+  alias: Irrigazione piante
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: '0'
+  condition: []
+  action:
+  - service: switch.turn_on
+    target:
+      entity_id: switch.plants_water_switch
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  - service: switch.turn_off
+    target:
+      entity_id: switch.plants_water_switch
+  mode: single

@@ -61,7 +61,7 @@ beamer_focus:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 2
+      seconds: 13
       milliseconds: 0
   - service: shell_command.beamer_switch_hdmi
   - delay:

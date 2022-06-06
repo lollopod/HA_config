@@ -37,7 +37,7 @@ http:
 tts:
   - platform: google_translate
 
-#group: !include groups.yaml
+group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 #homekit: !include homekit.yaml
@@ -123,11 +123,14 @@ light:
     name: Il Natale
     entity_id: switch.meross_plug_1
   - platform: switch
+    name: Comodino Isa
+    entity_id: switch.meross_plug_0
+  - platform: switch
     name: Divano
     entity_id: switch.sonoff_10008f5275
-#  - platform: switch
-#    name: Comodino Lorenzo
-#    entity_id: switch.sonoff_10008eab7f
+  - platform: switch
+    name: Comodino Lorenzo
+    entity_id: switch.sonoff_10008eab7f
 #  - platform: switch
 #    name: Comodino Isa
 #    entity_id: switch.plug_158d000154a757
@@ -322,7 +325,8 @@ media_player:
 #    controller_data: remote.rmmini_remote
   - platform: androidtv
     name: shield
-    host: 192.168.188.63
+#    host: 192.168.188.63
+    host: 192.168.188.68
     screencap: false
   - platform: androidtv
     name: beamer
@@ -347,7 +351,7 @@ spotify:
 
 shell_command:
   git_pull: ./gitpull.sh
-  beamer_switch_hdmi : "curl http://192.168.188.64:6095/controller?action=changesource&source=HDMI1"
+  beamer_switch_hdmi : curl "http://192.168.188.64:6095/controller?action=changesource&source=HDMI1"
   
   
 google_assistant:
