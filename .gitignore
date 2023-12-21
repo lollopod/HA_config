@@ -1,7 +1,7 @@
 # Example .gitignore file for your config dir.
 # A * ensures that everything will be ignored.
-*.log
-*.db
+*.log*
+*.db*
 *.pem
 
 *account.json
@@ -24,3 +24,4 @@ custom_components/
 ip_bans.yaml
 secrets.yaml
 known_devices.yaml
+.HA_VERSION
