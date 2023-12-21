@@ -10,7 +10,6 @@ tts
 !*.yaml
 !.gitignore
 !*.md
-!custom_components/*
 
 # Ignore folders.
 .storage
@@ -19,6 +18,7 @@ tts
 .ios.conf
 .ssh
 config/python_scripts
+custom_components/
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml
