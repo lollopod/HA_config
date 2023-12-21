@@ -1,10 +1,15 @@
-switchable:
-  name: Switchable things
-  entities:
-    - light.piantana
-    - switch.sonoff_10008eab7f
-    - switch.plug_158d000154a757
-    - media_player.shield
-    - switch.meross_plug_1
-    - light.divano
-    
+#switchable:
+#  name: Switchable things
+#  entities:
+#    - light.piantana
+#    - switch.sonoff_10008eab7f
+#    - switch.plug_158d000154a757
+#    - media_player.shield
+#    - switch.meross_plug_1
+#    - light.divano
+
+family:
+    name: Family
+    entities:
+    - person.lorenzo_campioni
+    - person.isadora_lenzi_michel

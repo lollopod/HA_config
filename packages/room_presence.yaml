@@ -1,0 +1,30 @@
+sensor:
+# One entry for each beacon you want to track
+  - platform: mqtt_room
+    device_id: "iphone_l"
+    name: 'ESPhone Lorenzo'
+    state_topic: 'espresense/devices/iphone_l'
+    timeout: 10
+    away_timeout: 120
+# One entry for each beacon you want to track
+  - platform: mqtt_room
+    device_id: "iphone_i"
+    name: 'ESPhone Isadora'
+    state_topic: 'espresense/devices/iphone_i'
+    timeout: 10
+    away_timeout: 120
+#  - platform: group
+#    name: Family Room
+#    entities:
+#        - sensor.esphone_lorenzo
+#        - sensor.esphone_isadora
+template:
+  - binary_sensor:
+      - name: Lorenzo Salotto
+        state: "{{ is_state('sensor.esphone_lorenzo', 'salotto') }}"
+      - name: Isadora Salotto
+        state: "{{ is_state('sensor.esphone_isadora', 'salotto') }}"
+  - sensor:
+      - name: no_motion_since_up 
+        unit_of_measurement: "s"
+        state: "{{ (state_attr('binary_sensor.motion_sensor_158d0002f968f8', 'No motion since') | int) - (state_attr('binary_sensor.motion_sensor_158d00015b833f', 'No motion since') | int ) }}"

@@ -75,3 +75,29 @@ beamer_focus:
   mode: single
   alias: Beamer focus
   icon: mdi:audio-video
+alfred_sale:
+  alias: Alfred sale
+  sequence:
+  - device_id: 842233fb42d362fa61fcb54e0162c4bb
+    domain: select
+    entity_id: select.alfred_selected_map
+    type: select_option
+    option: Sesto piano
+  - device_id: 842233fb42d362fa61fcb54e0162c4bb
+    domain: vacuum
+    entity_id: vacuum.alfred
+    type: clean
+  mode: single
+alfred_sale_duplica:
+  alias: Alfred scende
+  sequence:
+  - device_id: 842233fb42d362fa61fcb54e0162c4bb
+    domain: select
+    entity_id: select.alfred_selected_map
+    type: select_option
+    option: Quinto piano
+  - device_id: 842233fb42d362fa61fcb54e0162c4bb
+    domain: vacuum
+    entity_id: vacuum.alfred
+    type: dock
+  mode: single

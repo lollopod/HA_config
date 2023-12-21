@@ -1,0 +1,40 @@
+sensor:
+    - platform: oebb
+      evaId: 491116
+      dirInput: 491123 
+      
+      
+template:
+  - sensor:
+      - name: "oebb_journey_helper_0"
+        state: >
+          {{ state_attr('sensor.oebb_journey_0', 'startTime') }}
+  - sensor:
+      - name: "oebb_journey_helper_1"
+        state: >
+          {{ state_attr('sensor.oebb_journey_1', 'startTime') }}
+  - sensor:
+      - name: "oebb_journey_helper_2"
+        state: >
+          {{ state_attr('sensor.oebb_journey_2', 'startTime') }}
+  - sensor:
+      - name: "oebb_journey_helper_3"
+        state: >
+          {{ state_attr('sensor.oebb_journey_3', 'startTime') }}
+  - sensor:
+      - name: "oebb_journey_helper_4"
+        state: >
+          {{ state_attr('sensor.oebb_journey_4', 'startTime') }}
+  - sensor:
+      - name: "oebb_journey_helper_5"
+        state: >
+          {{ state_attr('sensor.oebb_journey_5', 'startTime') }}
+  - sensor:
+      - name: "oebb_journey_helper_6"
+        state: >
+          {{ state_attr('sensor.oebb_journey_6', 'startTime') }}
+  - sensor:
+      - name: "oebb_journey_helper_7"
+        state: >
+          {{ state_attr('sensor.oebb_journey_7', 'startTime') }}
+

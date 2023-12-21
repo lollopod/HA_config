@@ -1,0 +1,10 @@
+switch:
+    - platform: template
+      switches:
+            sale:
+                turn_on:
+                    service: script.turn_on
+                    entity_id: script.alfred_sale
+                turn_off:
+                    service: script.turn_on
+                    entity_id: script.alfred_scende

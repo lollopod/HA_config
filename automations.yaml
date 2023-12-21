@@ -1,11 +1,3 @@
-- alias: Start HomeKit
-  trigger:
-  - platform: homeassistant
-    event: start
-  action:
-  - delay: 00:05
-  - service: homekit.start
-  id: 964ebb771d0b477bb32c6cb576797155
 - alias: Continuous Integration
   trigger:
   - platform: state
@@ -71,24 +63,6 @@
     data:
       title: Nido Calendar Event
       message: '{{ state_attr(''calendar.nido'',''message'') }}'
-- id: '1611422769316'
-  alias: Scrivania scalda camera
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.desk_occupied
-    to: 'on'
-    for: 5 minutes
-  condition:
-  - condition: state
-    entity_id: sensor.family_status
-    state: HOME
-  action:
-  - service: climate.set_temperature
-    data:
-      temperature: '21'
-    entity_id: climate.termostato_camera
-  mode: single
 - id: '1642777137505'
   alias: Beamer auto off
   description: ''
@@ -129,9 +103,10 @@
     at: 02:42
   condition: []
   action:
-  - service: fritz.reboot
-    data:
-      device_id: 3e8034983d5caa5ce048e1a890f49b75
+  - device_id: 8d0530cc0ae5f47dce3826df780ece47
+    domain: button
+    entity_id: button.fritz_box_4020_reboot
+    type: press
   mode: single
 - id: '1649931941416'
   alias: Irrigazione piante
@@ -153,4 +128,287 @@
   - service: switch.turn_off
     target:
       entity_id: switch.plants_water_switch
+  mode: single
+- id: '1656871506552'
+  alias: Luce scale automatica
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light.yaml
+    input:
+      motion_entity: binary_sensor.motion_sensor_158d0002f968f8
+      light_target:
+        device_id:
+        - e188122f54a66ed312008833ca6cab47
+        entity_id: light.ingresso
+      no_motion_wait: 120
+- id: '1656871780207'
+  alias: Piantana auto
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light.yaml
+    input:
+      motion_entity: binary_sensor.motion_sensor_158d00015b833f
+      light_target:
+        entity_id: light.piantana
+      no_motion_wait: 60
+- id: '1660550092812'
+  alias: Fornellino zanzare
+  description: ''
+  trigger:
+  - platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.switch_158d000183e7d1
+      click_type: single
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 033bf105ddd0bc5343caabc1ed70aaee
+    entity_id: switch.switchfornellino_outlet
+    domain: switch
+  mode: single
+- id: '1660550190984'
+  alias: Fornellino zanzare - spegni
+  description: ''
+  trigger:
+  - platform: time
+    at: 09:00:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 033bf105ddd0bc5343caabc1ed70aaee
+    entity_id: switch.switchfornellino_outlet
+    domain: switch
+  mode: single
+- id: '1661698284100'
+  alias: Beamer always HDMI
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - media_player.beamer
+    attribute: source
+    to: com.mitv.tvhome
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 3
+  condition:
+  - condition: state
+    entity_id: input_boolean.beamer_hdmi_auto
+    state: 'on'
+  action:
+  - service: shell_command.beamer_switch_hdmi
+    data: {}
+  mode: single
+- id: '1666069596238'
+  alias: Auto info 6th
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light.yaml
+    input:
+      motion_entity: binary_sensor.motion_sensor_158d00015b833f
+      light_target:
+        entity_id:
+        - light.info_screen_6th
+- id: '1669742541054'
+  alias: Accendi luci Natale
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 0
+  - platform: state
+    entity_id:
+    - binary_sensor.presenza_salotto
+    to: 'on'
+  condition:
+  - condition: and
+    conditions:
+    - condition: sun
+      after: sunset
+      before: sunrise
+    - condition: state
+      state: 'on'
+      entity_id: binary_sensor.presenza_salotto
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id: light.natale
+  mode: single
+- id: '1670752396801'
+  alias: Spegni Luci Natale
+  description: ''
+  trigger:
+  - platform: time
+    at: '22:00:00'
+  - platform: state
+    entity_id:
+    - group.family
+    from: home
+    to: not_home
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.natale
+  mode: single
+- id: '1671121285936'
+  alias: Info screen 5th
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 4770d793e1c8d0a57648e7c195454245
+    entity_id: binary_sensor.motion_sensor_158d0002f968f8
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      payload: '{"wake": true}'
+      topic: wallpanel/mywallpanel/command
+  mode: single
+- id: '1698750170189'
+  alias: Piantana brightness down
+  description: ''
+  trigger:
+  - platform: time
+    at: '21:00:00'
+  condition: []
+  action:
+  - service: yeelight.set_color_scene
+    data:
+      brightness: 10
+      rgb_color:
+      - 52
+      - 122
+      - 235
+    target:
+      device_id: 8584db56fd67211fbbe05d071f85b39f
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - type: turn_off
+    device_id: 8584db56fd67211fbbe05d071f85b39f
+    entity_id: light.piantana
+    domain: light
+  mode: single
+- id: '1698753479381'
+  alias: Piantana brightness up
+  description: ''
+  trigger:
+  - platform: time
+    at: 08:00:00
+  condition: []
+  action:
+  - service: yeelight.set_color_scene
+    data:
+      brightness: 100
+      rgb_color:
+      - 168
+      - 141
+      - 50
+    target:
+      device_id: 8584db56fd67211fbbe05d071f85b39f
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - type: turn_off
+    device_id: 8584db56fd67211fbbe05d071f85b39f
+    entity_id: light.piantana
+    domain: light
+  mode: single
+- id: '1700317481745'
+  alias: Accendi Cuociuova
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.orario_cuociuova
+  condition:
+  - condition: state
+    entity_id: input_boolean.attiva_cuociuova
+    state: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  action:
+  - type: turn_on
+    device_id: 1f4ca170a047c741db8ee5c593c6da5d
+    entity_id: switch.switchcuociuova_outlet
+    domain: switch
+  mode: single
+- id: '1700317601134'
+  alias: Spegni Cuociuova
+  description: ''
+  trigger:
+  - type: power
+    platform: device
+    device_id: 1f4ca170a047c741db8ee5c593c6da5d
+    entity_id: sensor.switchcuociuova_power
+    domain: sensor
+    below: 100
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 1f4ca170a047c741db8ee5c593c6da5d
+    entity_id: switch.switchcuociuova_outlet
+    domain: switch
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.attiva_cuociuova
+  mode: single
+- id: '1702055884992'
+  alias: Spegni cuociuova 2W
+  description: ''
+  trigger:
+  - type: power
+    platform: device
+    device_id: 1f4ca170a047c741db8ee5c593c6da5d
+    entity_id: sensor.switchcuociuova_power
+    domain: sensor
+    below: 2
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 1f4ca170a047c741db8ee5c593c6da5d
+    entity_id: switch.switchcuociuova_outlet
+    domain: switch
+  mode: single
+- id: '1702057179274'
+  alias: Spegni cuociuova 6am
+  description: ''
+  trigger:
+  - platform: time
+    at: 06:00:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 1f4ca170a047c741db8ee5c593c6da5d
+    entity_id: switch.switchcuociuova_outlet
+    domain: switch
   mode: single

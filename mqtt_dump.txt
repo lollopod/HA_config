@@ -1,3 +1,28 @@
-plantStatus,hello world #233
-plantStatus,hello world #234
-plantStatus,hello world #235
+espresense/rooms/salotto/status,online
+espresense/rooms/salotto/max_distance,16.00
+espresense/rooms/salotto/absorption,3.50
+espresense/rooms/salotto/tx_ref_rssi,-59
+espresense/rooms/salotto/rx_adj_rssi,0
+espresense/rooms/salotto/arduino_ota,OFF
+espresense/rooms/salotto/auto_update,OFF
+espresense/rooms/salotto/prerelease,OFF
+espresense/rooms/salotto/pir_timeout,0.50
+espresense/rooms/salotto/radar_timeout,0.50
+espresense/rooms/salotto/switch_1_timeout,0.50
+espresense/rooms/salotto/switch_2_timeout,0.50
+espresense/rooms/salotto/button_1_timeout,0.50
+espresense/rooms/salotto/button_2_timeout,0.50
+espresense/rooms/salotto/led_1,{"state":"OFF"}
+espresense/settings/iBeacon:e5ca1ade-f007-ba11-0000-000000000000-224-48175/config,{"id":"node:salotto","name":"Salotto"}
+espresense/settings/irk:06812da80ba64c98dbe41b8b3dd650c2/config,{"id":"iphone_l","name":"iPhone L"}
+espresense/devices/apple:1006:10-12/salotto,{"mac":"43a912701d5f","id":"apple:1006:10-12","disc":"501e93bf51fe","idType":150,"rssi@1m":-65,"rssi":-80,"raw":2.68,"distance":3.61,"int":1136}
+espresense/devices/apple:1005:9-2/salotto,{"mac":"645e140ff16d","id":"apple:1005:9-2","disc":"02182157d2","idType":150,"rssi@1m":-65,"rssi":-80,"raw":2.68,"distance":3.15,"int":776}
+espresense/devices/apple:1006:10-12/salotto,{"mac":"7033033f08f4","id":"apple:1006:10-12","disc":"6f1eb75f6a91","idType":150,"rssi@1m":-65,"rssi":-90,"raw":5.18,"distance":6.30,"int":2651}
+espresense/devices/md:ffff:1815/salotto,{"mac":"7c5e696cc026","id":"md:ffff:1815","idType":20,"rssi@1m":-80,"rssi":-90,"raw":1.93,"distance":1.95,"int":2095}
+espresense/devices/apple:1005:9-2/salotto,{"mac":"77b73a8e6321","id":"apple:1005:9-2","disc":"02182157d2","idType":150,"rssi@1m":-65,"rssi":-80,"raw":2.68,"distance":3.08,"int":782}
+espresense/devices/apple:1006:10-11/salotto,{"mac":"615b57fd6f13","id":"apple:1006:10-11","disc":"0e1eab0f49c7","idType":150,"rssi@1m":-65,"rssi":-63,"raw":0.88,"distance":0.94,"int":495}
+espresense/devices/e2ec5083f091/salotto,{"mac":"e2ec5083f091","id":"e2ec5083f091","idType":5,"rssi@1m":-65,"rssi":-65,"raw":1.00,"distance":0.98,"int":3780}
+espresense/devices/iphone_l/salotto,{"mac":"477012406863","id":"iphone_l","name":"iPhone L","disc":"051e914f4309","idType":250,"rssi@1m":-65,"rssi":-62,"raw":0.82,"distance":0.69,"int":334}
+espresense/devices/a4d18c82403a/salotto,{"mac":"a4d18c82403a","id":"a4d18c82403a","idType":55,"rssi@1m":-65,"rssi":-79,"raw":2.51,"distance":2.61,"int":471}
+espresense/devices/sd:0xfe9f/salotto,{"mac":"5e9e9e8767b7","id":"sd:0xfe9f","idType":15,"rssi@1m":-71,"rssi":-65,"raw":0.67,"distance":0.58,"int":468}
+espresense/devices/sd:0xfe9f/salotto,{"mac":"6c305ee71913","id":"sd:0xfe9f","idType":15,"rssi@1m":-71,"rssi":-80,"raw":1.81,"distance":1.91,"int":743}

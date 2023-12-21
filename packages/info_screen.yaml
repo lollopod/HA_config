@@ -1,0 +1,31 @@
+shell_command:
+  
+switch:
+  - platform: command_line
+    switches:
+      debian_info_screen:
+        command_on: "ssh -i /config/ssh/id_rsa -o 'StrictHostKeyChecking=no' kiosk@192.168.188.94 'xset -display :0.0 dpms force on'"
+        command_off: "ssh -i /config/ssh/id_rsa -o 'StrictHostKeyChecking=no' kiosk@192.168.188.94 'xset -display :0.0 dpms force off'"
+        
+        
+light:
+  - platform: switch
+    name: Info Screen 6th
+    entity_id: switch.debian_info_screen
+
+# Example configuration.yaml entry
+sensor:
+  - platform: rest
+    name: next_trams_to_center
+    resource: https://fahrplan.oebb.at/bin/stboard.exe/dn?L=vs_liveticker&evaId=491116&boardType=dep&productsFilter=1011111111011&dirInput=491123&tickerID=dep&start=yes&eqstops=false&showJourneys=12&additionalTime=0&outputMode=tickerDataOnly
+    value_template: "{{ value[14:] | from_json }}"
+
+#sensor:
+#  - platform: command_line
+#    name: sunny_stations
+#    command: "python3 ~/config/python_scripts/SunSeeker/main.py"
+#    scan_interval: 20000
+#rest: 
+#  - resource: https://fahrplan.oebb.at/bin/stboard.exe/dn?L=vs_liveticker&evaId=491116&boardType=dep&productsFilter=1011111111011&dirInput=491123&tickerID=dep&start=yes&eqstops=false&showJourneys=12&additionalTime=0&outputMode=tickerDataOnly
+#    sensor: 
+#        - name: 

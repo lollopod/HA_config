@@ -15,6 +15,20 @@ homeassistant:
   # Customization file
   customize: !include customize.yaml
   packages: !include_dir_named packages
+  
+  auth_providers:
+    - type: trusted_networks
+      trusted_networks:
+        - 192.168.188.0/24 ## your device IP  (where you want to login)
+        - 127.0.0.1
+      trusted_users: ## the HA instance IP
+        192.168.188.94: 7718baf9ef254f669981ce3424ca59e5 ## the user id
+        192.168.188.77: 7718baf9ef254f669981ce3424ca59e5
+        192.168.188.34: 7718baf9ef254f669981ce3424ca59e5 ## the user id
+        127.0.0.1: 7718baf9ef254f669981ce3424ca59e5 ## the user id
+      allow_bypass_login: true
+    - type: homeassistant 
+## The user id can be found here: http://homeassistant.local:8123/config/users
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
@@ -102,10 +116,10 @@ lovelace:
 ##################
 #logger configuration
 ##################
-#logger:
-#  default: warn
-#  logs:
-#    yeelight: debug
+logger:
+  default: warn
+  logs:
+    custom_components.oebb: debug
 
 
 
@@ -122,18 +136,16 @@ light:
   - platform: switch
     name: Il Natale
     entity_id: switch.meross_plug_1
-  - platform: switch
-    name: Comodino Isa
-    entity_id: switch.meross_plug_0
+#  - platform: switch
+#    name: Comodino Isa
+#    entity_id: switch.meross_plug_0
   - platform: switch
     name: Divano
     entity_id: switch.sonoff_10008f5275
   - platform: switch
     name: Comodino Lorenzo
     entity_id: switch.sonoff_10008eab7f
-#  - platform: switch
-#    name: Comodino Isa
-#    entity_id: switch.plug_158d000154a757
+
 #  - platform: yeelight
 #    devices:
 #      192.168.188.38:
@@ -186,7 +198,7 @@ sensor:
   - platform: here_travel_time
     api_key: !secret here_api_key
     name: "Isadora to home"
-    origin_entity_id: person.isa
+    origin_entity_id: person.isadora_lenzi_michel
     destination_entity_id: zone.home
 
   - platform: rest
@@ -225,11 +237,11 @@ sensor:
         arg: /home
       - type: memory_free
 #device trackers 
-ios:
+#ios:
 
-device_tracker:
-  - platform: fritz
-    host: 192.168.188.1
+#device_tracker:
+#  - platform: fritz
+#    host: 192.168.188.1
 
 
 
@@ -237,19 +249,7 @@ device_tracker:
 switch:
   - platform: template
     switches:
-      appliances:
-        friendly_name: "Prese Switchable"
-        value_template: "{{ is_state('sensor.appliances_combined_state', 'on') }}"
-        turn_on:
-          service: switch.turn_on
-          entity_id: 
-            - switch.termoarredo
-            - switch.scaldabagno
-        turn_off:
-          service: switch.turn_off
-          entity_id:
-            - switch.termoarredo
-            - switch.scaldabagno
+
       televisione:
         friendly_name: "TV"
         turn_on:
@@ -265,26 +265,36 @@ switch:
           service: media_player.turn_off
           target:
             entity_id: media_player.shield
+      focus:
+        turn_on: 
+          - service: script.turn_on
+            target:
+              entity_id: script.beamer_focus
+        turn_off: 
+          - service: script.turn_on
+            target:
+              entity_id: script.beamer_focus
+      
 ############# Climate section 
-  - platform: broadlink
+#  - platform: broadlink
 #    host: 192.168.188.39
-    mac: !secret broadlink_mac
+#    mac: !secret broadlink_mac
 #    timeout: 30
 #    friendly_name: "Dispositivo Broadlink"
 #    type: rm_mini
-    switches:
-      learner:
-        friendly_name: "Learner"
-        command_on: 'JgC8AXQ3EQwRKBELEQsRDBELDw4RCxELEQwQDRELEQwRKBELEQsRDBELEQwRCw8NESgPKhEoEQsSCxEoEQwQDBELEQwRCxEMDw0RCxEMEQsRDBELEQsQDg8NEQsRDBELEQwRCxELEA0RCxEMEQsRCxANEA0PDRANESgRJxEMEQsRDBAMEQsRAAFFdDcPDhEnEgwRCxELEQwPDREMEQsRCxEMEQsPDhEnEQwRCxANEQwRCxEMEQsPKhEoEScRDBELESgRCxEMDw0PDhELEA0PDg8NEQsRDBELEQwPDREoEQsRDA8pEQwRCxInEgsRDBELESgPKhEnESgRDBAMEQsRDBELEQwPDRELEgwRJxEoESgPKhEnEgsRKBELESgRKBELESgRKBELEQsQDRANEQsRDA8NEA0RCxELEgsRCw8OEScRKBEoEQsQDRANEQsRDBELEQwPDRELECkRKBEoEQsRDBELDw0RDBANDw0QDRELEQwRCxELEA0RCxEMEQsRKBELEQwRJxENEQsRCxEoEQwRCxELEQwRCxEMDw0RCxEMEQsQDREMEAwRDA8NEQsRDBEoDykRKBEoDyoRCxEMEQANBQAAAAAAAAAAAAAAAA'
-        command_off: ''
-      kitchen_cooler:
-        friendly_name: "Kitchen Cooler"
-        command_on: 'JgC8AXQ3EA0PKREMDw0QDQ8NDw0QDQ8NEA0QDQ8NEA0PKhAMDw0QDQ8NDw0QDQ8NECkQKRApEAwRDBApEA0PDQ8NEA0PDQ8ODw0PDRANDw0PDRANDw0RDQ8NDw0QDQ8NDw4PDQ8NEA0PDQ8ODw0PDRANEQwPDRANDyoQKBANDw0PDg8NDw0QAAFGdTYQDQ8pEQ0PDQ8ODw0PDRANDw0PDRANDw0QDQ8qEAwPDRENDw0PDRANDw0PKhApECgRDA8NECkQDBANDw0QDQ8NEQwQDQ8NDw4PDQ8NEA0PDQ8qEAwQDQ8pESgQKRAMEQ0PDQ8qEAwQDQ8NDyoQDBANDw0PDg8NDw0QDQ8NEQwQKRApECkQKRAoEA0PKhAMDyoQKBEMDyoQKBEMDw0QDREMDw0QDQ8NDw4PDQ8NEA0PDQ8ODykQKRApEAwQDREMDw0QDQ8NDw4PDQ8NECkQKRApEAwPDg8NDw0QDREMDw0QDQ8NDw4PDQ8NEA0PDQ8ODw0PKhAMDw4RKBANDw0PDRApEA0PDQ8NEA0PDQ8ODw0PDRANDw0RDBANDw0PDg8NDw0QDQ8NDyoQDBApEA0PDQ8NEAANBQAAAAAAAAAAAAAAAA=='
-        command_off: 'JgC8AXQ3EgoQKRIKEgsQDBILEQsPDRANDw0QDRILEgoSJxIKEgsQDBILEgoQDBANDyoSJhInEA0RDA8qEAwSChEMDw0QDRIKEgoQDQ8NEgsSChIKEQwQDQ8ODw0PDRANEgoSChILEAwQDQ8NEgoQDQ8NEwsQDA8NECkSJxAMEA0SChILEQsQAAFFeDQQDA8qEwoSCxAMDw0SCxIKEgsQDBIKEQwSChInEAwSCxILEAwSCxAMEA0PKhEnECkSChANEicQDA8NEgsSChANEgsQDBILEgoPDRILEgoSCxAMDw0QDQ8qEiYSJxANEgsQDBILEicQKBApEicQDBANEgoPDRILEgoSCxIKEA0QKRApEicSJxEnEgsSJhEMEicSJxELEicQKBILEQsQDRANEgoQDQ8NDw0QDQ8NEA0PDRIKEicSJxApEAwRDBILEgoRDBAMEA0PDRIKEicQKRInEgoQDBANDw0QDRANEgoQDQ8NEgsRCxAMEA0PDRILEAwSJxAMDw0RKBENDw0PDRApEgsPDQ8NEA0SChILDw0SChANDw0QDRILEAwSCw8NEgoRKBANDykQKRILECgQDQ8NDwANBQAAAAAAAAAAAAAAAA'
-      kitchen_heater:
-        friendly_name: "Kitchen Heater"
-        command_on: 'JgC8AXQ3EQwRKBELEQsRDBELDw4RCxELEQwQDRELEQwRKBELEQsRDBELEQwRCw8NESgPKhEoEQsSCxEoEQwQDBELEQwRCxEMDw0RCxEMEQsRDBELEQsQDg8NEQsRDBELEQwRCxELEA0RCxEMEQsRCxANEA0PDRANESgRJxEMEQsRDBAMEQsRAAFFdDcPDhEnEgwRCxELEQwPDREMEQsRCxEMEQsPDhEnEQwRCxANEQwRCxEMEQsPKhEoEScRDBELESgRCxEMDw0PDhELEA0PDg8NEQsRDBELEQwPDREoEQsRDA8pEQwRCxInEgsRDBELESgPKhEnESgRDBAMEQsRDBELEQwPDRELEgwRJxEoESgPKhEnEgsRKBELESgRKBELESgRKBELEQsQDRANEQsRDA8NEA0RCxELEgsRCw8OEScRKBEoEQsQDRANEQsRDBELEQwPDRELECkRKBEoEQsRDBELDw0RDBANDw0QDRELEQwRCxELEA0RCxEMEQsRKBELEQwRJxENEQsRCxEoEQwRCxELEQwRCxEMDw0RCxEMEQsQDREMEAwRDA8NEQsRDBEoDykRKBEoDyoRCxEMEQANBQAAAAAAAAAAAAAAAA'
-        command_off: 'JgC8AXQ3EgoQKRIKEgsQDBILEQsPDRANDw0QDRILEgoSJxIKEgsQDBILEgoQDBANDyoSJhInEA0RDA8qEAwSChEMDw0QDRIKEgoQDQ8NEgsSChIKEQwQDQ8ODw0PDRANEgoSChILEAwQDQ8NEgoQDQ8NEwsQDA8NECkSJxAMEA0SChILEQsQAAFFeDQQDA8qEwoSCxAMDw0SCxIKEgsQDBIKEQwSChInEAwSCxILEAwSCxAMEA0PKhEnECkSChANEicQDA8NEgsSChANEgsQDBILEgoPDRILEgoSCxAMDw0QDQ8qEiYSJxANEgsQDBILEicQKBApEicQDBANEgoPDRILEgoSCxIKEA0QKRApEicSJxEnEgsSJhEMEicSJxELEicQKBILEQsQDRANEgoQDQ8NDw0QDQ8NEA0PDRIKEicSJxApEAwRDBILEgoRDBAMEA0PDRIKEicQKRInEgoQDBANDw0QDRANEgoQDQ8NEgsRCxAMEA0PDRILEAwSJxAMDw0RKBENDw0PDRApEgsPDQ8NEA0SChILDw0SChANDw0QDRILEAwSCw8NEgoRKBANDykQKRILECgQDQ8NDwANBQAAAAAAAAAAAAAAAA'
+#    switches:
+#      learner:
+#        friendly_name: "Learner"
+#        command_on: 'JgC8AXQ3EQwRKBELEQsRDBELDw4RCxELEQwQDRELEQwRKBELEQsRDBELEQwRCw8NESgPKhEoEQsSCxEoEQwQDBELEQwRCxEMDw0RCxEMEQsRDBELEQsQDg8NEQsRDBELEQwRCxELEA0RCxEMEQsRCxANEA0PDRANESgRJxEMEQsRDBAMEQsRAAFFdDcPDhEnEgwRCxELEQwPDREMEQsRCxEMEQsPDhEnEQwRCxANEQwRCxEMEQsPKhEoEScRDBELESgRCxEMDw0PDhELEA0PDg8NEQsRDBELEQwPDREoEQsRDA8pEQwRCxInEgsRDBELESgPKhEnESgRDBAMEQsRDBELEQwPDRELEgwRJxEoESgPKhEnEgsRKBELESgRKBELESgRKBELEQsQDRANEQsRDA8NEA0RCxELEgsRCw8OEScRKBEoEQsQDRANEQsRDBELEQwPDRELECkRKBEoEQsRDBELDw0RDBANDw0QDRELEQwRCxELEA0RCxEMEQsRKBELEQwRJxENEQsRCxEoEQwRCxELEQwRCxEMDw0RCxEMEQsQDREMEAwRDA8NEQsRDBEoDykRKBEoDyoRCxEMEQANBQAAAAAAAAAAAAAAAA'
+#        command_off: ''
+#      kitchen_cooler:
+#        friendly_name: "Kitchen Cooler"
+#        command_on: 'JgC8AXQ3EA0PKREMDw0QDQ8NDw0QDQ8NEA0QDQ8NEA0PKhAMDw0QDQ8NDw0QDQ8NECkQKRApEAwRDBApEA0PDQ8NEA0PDQ8ODw0PDRANDw0PDRANDw0RDQ8NDw0QDQ8NDw4PDQ8NEA0PDQ8ODw0PDRANEQwPDRANDyoQKBANDw0PDg8NDw0QAAFGdTYQDQ8pEQ0PDQ8ODw0PDRANDw0PDRANDw0QDQ8qEAwPDRENDw0PDRANDw0PKhApECgRDA8NECkQDBANDw0QDQ8NEQwQDQ8NDw4PDQ8NEA0PDQ8qEAwQDQ8pESgQKRAMEQ0PDQ8qEAwQDQ8NDyoQDBANDw0PDg8NDw0QDQ8NEQwQKRApECkQKRAoEA0PKhAMDyoQKBEMDyoQKBEMDw0QDREMDw0QDQ8NDw4PDQ8NEA0PDQ8ODykQKRApEAwQDREMDw0QDQ8NDw4PDQ8NECkQKRApEAwPDg8NDw0QDREMDw0QDQ8NDw4PDQ8NEA0PDQ8ODw0PKhAMDw4RKBANDw0PDRApEA0PDQ8NEA0PDQ8ODw0PDRANDw0RDBANDw0PDg8NDw0QDQ8NDyoQDBApEA0PDQ8NEAANBQAAAAAAAAAAAAAAAA=='
+#        command_off: 'JgC8AXQ3EgoQKRIKEgsQDBILEQsPDRANDw0QDRILEgoSJxIKEgsQDBILEgoQDBANDyoSJhInEA0RDA8qEAwSChEMDw0QDRIKEgoQDQ8NEgsSChIKEQwQDQ8ODw0PDRANEgoSChILEAwQDQ8NEgoQDQ8NEwsQDA8NECkSJxAMEA0SChILEQsQAAFFeDQQDA8qEwoSCxAMDw0SCxIKEgsQDBIKEQwSChInEAwSCxILEAwSCxAMEA0PKhEnECkSChANEicQDA8NEgsSChANEgsQDBILEgoPDRILEgoSCxAMDw0QDQ8qEiYSJxANEgsQDBILEicQKBApEicQDBANEgoPDRILEgoSCxIKEA0QKRApEicSJxEnEgsSJhEMEicSJxELEicQKBILEQsQDRANEgoQDQ8NDw0QDQ8NEA0PDRIKEicSJxApEAwRDBILEgoRDBAMEA0PDRIKEicQKRInEgoQDBANDw0QDRANEgoQDQ8NEgsRCxAMEA0PDRILEAwSJxAMDw0RKBENDw0PDRApEgsPDQ8NEA0SChILDw0SChANDw0QDRILEAwSCw8NEgoRKBANDykQKRILECgQDQ8NDwANBQAAAAAAAAAAAAAAAA'
+#      kitchen_heater:
+#        friendly_name: "Kitchen Heater"
+#        command_on: 'JgC8AXQ3EQwRKBELEQsRDBELDw4RCxELEQwQDRELEQwRKBELEQsRDBELEQwRCw8NESgPKhEoEQsSCxEoEQwQDBELEQwRCxEMDw0RCxEMEQsRDBELEQsQDg8NEQsRDBELEQwRCxELEA0RCxEMEQsRCxANEA0PDRANESgRJxEMEQsRDBAMEQsRAAFFdDcPDhEnEgwRCxELEQwPDREMEQsRCxEMEQsPDhEnEQwRCxANEQwRCxEMEQsPKhEoEScRDBELESgRCxEMDw0PDhELEA0PDg8NEQsRDBELEQwPDREoEQsRDA8pEQwRCxInEgsRDBELESgPKhEnESgRDBAMEQsRDBELEQwPDRELEgwRJxEoESgPKhEnEgsRKBELESgRKBELESgRKBELEQsQDRANEQsRDA8NEA0RCxELEgsRCw8OEScRKBEoEQsQDRANEQsRDBELEQwPDRELECkRKBEoEQsRDBELDw0RDBANDw0QDRELEQwRCxELEA0RCxEMEQsRKBELEQwRJxENEQsRCxEoEQwRCxELEQwRCxEMDw0RCxEMEQsQDREMEAwRDA8NEQsRDBEoDykRKBEoDyoRCxEMEQANBQAAAAAAAAAAAAAAAA'
+#        command_off: 'JgC8AXQ3EgoQKRIKEgsQDBILEQsPDRANDw0QDRILEgoSJxIKEgsQDBILEgoQDBANDyoSJhInEA0RDA8qEAwSChEMDw0QDRIKEgoQDQ8NEgsSChIKEQwQDQ8ODw0PDRANEgoSChILEAwQDQ8NEgoQDQ8NEwsQDA8NECkSJxAMEA0SChILEQsQAAFFeDQQDA8qEwoSCxAMDw0SCxIKEgsQDBIKEQwSChInEAwSCxILEAwSCxAMEA0PKhEnECkSChANEicQDA8NEgsSChANEgsQDBILEgoPDRILEgoSCxAMDw0QDQ8qEiYSJxANEgsQDBILEicQKBApEicQDBANEgoPDRILEgoSCxIKEA0QKRApEicSJxEnEgsSJhEMEicSJxELEicQKBILEQsQDRANEgoQDQ8NDw0QDQ8NEA0PDRIKEicSJxApEAwRDBILEgoRDBAMEA0PDRIKEicQKRInEgoQDBANDw0QDRANEgoQDQ8NEgsRCxAMEA0PDRILEAwSJxAMDw0RKBENDw0PDRApEgsPDQ8NEA0SChILDw0SChANDw0QDRILEAwSCw8NEgoRKBANDykQKRILECgQDQ8NDwANBQAAAAAAAAAAAAAAAA'
   - platform: command_line
     switches:
       beamer:
@@ -345,9 +355,9 @@ media_player:
 #  password: !secret n26_password
 
 
-spotify:
-  client_id: !secret spotify_id
-  client_secret: !secret spotify_secret
+#spotify:
+#  client_id: !secret spotify_id
+#  client_secret: !secret spotify_secret
 
 shell_command:
   git_pull: ./gitpull.sh
@@ -408,13 +418,31 @@ google_assistant:
       aliases:
         - "TV"
         - "Television"
+    switch.focus:
+      expose: true
+      name: "Focus"
+      aliases:
+        - "Fuoco"
+        - "Metti a fuoco"
+    switch.fornellino:
+      expose: true
+      name: "Fornellino"
+      room: "Camera da Letto"
     script.beamer_focus:
       expose: true
       name: "Beamer Focus"
+      room: "Soggiorno"
       aliases:
         - "Fuoco"
         - "Metti a fuoco"
         - "Focus"
+    vacuum.alfred:
+      expose: true
+      name: "Alfred"
+      room: "Ingresso"
+    switch.sale:
+      expose: true
+      name: "Sale"
 # Example configuration.yaml entry
 weather:
   - platform: openweathermap
@@ -455,9 +483,21 @@ recorder:
       - media_player.mi_box_s
       - media_player.shield
       - media_player.shield_cast
-#      - sensor.presenza_scrivania_nodered
-google:
-  client_id: !secret gcal_client_id
-  client_secret: !secret gcal_client_secret
-  
+      - light.info_screen_6th
+      - switch.cuociuova
+      - sensor.esphone_lorenzo
+      - sensor.no_motion_since_up
+      - sensor.switchcuociuova_power
+      - sensor.esphone_isadora
+#google:
+#  client_id: !secret gcal_client_id
+#  client_secret: !secret gcal_client_secret
  
+ 
+frontend:
+  extra_module_url:
+    - /local/lovelace-card-mod/card-mod.js
+    - /local/community/clock-weather-card/clock-weather-card.js
+ 
+
+  

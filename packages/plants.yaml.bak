@@ -1,0 +1,55 @@
+mqtt:
+  - switch:
+        unique_id: plants_valve
+        name: "Elettrovalvola"
+        state_topic: "home/plants/valve"
+        command_topic: "home/plants/valve/set"
+        payload_on: 1
+        payload_off: 0
+        state_on: 1
+        state_off: 0
+        optimistic: false
+        qos: 0
+        retain: true
+  - switch:
+        unique_id: plants_auto
+        name: "Annaffiatoio automatico"
+        state_topic: "home/plants/auto"
+        command_topic: "home/plants/auto/set"
+        payload_on: 1
+        payload_off: 0
+        state_on: 1
+        state_off: 0
+        optimistic: false
+        qos: 0
+        retain: true
+    
+  - sensor:
+        unique_id: plants_measurement
+        name: "Calla"
+        state_topic: "home/plants/measurement"
+        unit_of_measurement: 'V'
+  - sensor:
+        unique_id: plants_measurement1
+        name: "Basilico"
+        state_topic: "home/plants/measurement1"
+        unit_of_measurement: 'V'
+  - sensor:
+        unique_id: plants_measurement2
+        name: "Pianta 3"
+        state_topic: "home/plants/measurement2"
+  - sensor:
+        unique_id: plants_measurement3
+        name: "Pianta 4"
+        state_topic: "home/plants/measurement3"
+    
+group:
+  plants:
+    name: "Piante Terrazzo"
+    entities:
+      - switch.plants_water_switch
+      - switch.annaffiatoio_automatico
+      - sensor.plants_measurement
+      - sensor.rosmarino
+      - sensor.pianta_3
+      - sensor.pianta_4

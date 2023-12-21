@@ -1,0 +1,12 @@
+light:
+  - platform: switch
+    name: albero_di_natale
+    entity_id: switch.switchfornellino_outlet
+  - platform: switch
+    name: luci_terrazza
+    entity_id: switch.switchmeross_plug_1_outlet
+  - platform: group
+    name: natale
+    entities:
+      - light.luci_terrazza
+      - light.albero_di_natale

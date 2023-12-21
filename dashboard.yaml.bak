@@ -1,0 +1,79 @@
+kiosk_mode: null
+kiosk: true
+views:
+  - path: default_view
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: auto 30px 52%
+      grid-template-rows: auto
+      grid-template-areas: |
+        "header header header"
+        "main . sidebar"
+        "footer footer footer"
+      mediaquery:
+        '(max-width: 600px)':
+          grid-template-columns: 100%
+          grid-template-areas: |
+            "header"
+            "sidebar"
+            "main"
+            "footer"
+        '(max-width: 800px)':
+          grid-template-columns: 50% 50%
+          grid-template-areas: |
+            "header sidebar"
+            "main main"
+            "footer footer"
+    cards:
+      - type: iframe
+        url: >-
+          https://fahrplan.oebb.at/bin/stboard.exe/dn?L=vs_liveticker&evaId=491116&boardType=dep&productsFilter=1011111111011&dirInput=491123&tickerID=dep&start=yes&eqstops=false&showJourneys=12&additionalTime=0
+        aspect_ratio: '9:32'
+        show_header_toggle: false
+        view_layout:
+          grid-area: sidebar
+        card_mod:
+          style: |
+            div#root iframe  {
+            transform: scale({{400|float / 100|float}});
+            transform-origin: 0 0;
+            width: 100000px;
+            height: 100000px;
+            }
+      - type: vertical-stack
+        show_header_toggle: false
+        view_layout:
+          grid-area: main
+        cards:
+          - type: glance
+            title: Next trams to center
+            show_name: false
+            entities:
+              - sensor.oebb_journey_0
+              - sensor.oebb_journey_helper_0
+          - type: entities
+            entities:
+              - person.lorenzo_campioni
+              - person.isadora_lenzi_michel
+          - type: custom:clock-weather-card
+            entity: weather.openweathermap
+            animated_icon: true
+            locale: it
+  - theme: Backend-selected
+    path: timetable-only
+    title: timetable-only
+    type: panel
+    badges: []
+    cards:
+      - type: iframe
+        url: >-
+          https://fahrplan.oebb.at/bin/stboard.exe/dn?L=vs_liveticker&evaId=491116&boardType=dep&productsFilter=1011111111011&dirInput=491123&tickerID=dep&start=yes&eqstops=false&showJourneys=12&additionalTime=0
+        aspect_ratio: 50%
+        card_mod:
+          style: |
+            div#root iframe  {
+            transform: scale({{400|float / 100|float}});
+            transform-origin: 0 0;
+            width: 100000px;
+            height: 100000px;
+            }
